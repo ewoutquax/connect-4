@@ -10,6 +10,15 @@ class Board
     end
   end
 
+  def draw
+    @rows.each do |row|
+      puts row.split(//).join(' | ').gsub('0', '.')
+    end # /row
+    puts '-------------------------'
+    puts '1 | 2 | 3 | 4 | 5 | 6 | 7'
+    puts ''
+  end # /draw
+
   def state
     @rows.join(' ')
   end

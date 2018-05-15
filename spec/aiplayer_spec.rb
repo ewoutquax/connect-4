@@ -14,7 +14,21 @@ describe AIPlayer do
   end
 
   it 'q-learning is empty' do
-    expect(aiplayer.q_state).to eq({})
+    expect(aiplayer.q_states).to eq({})
+  end
+
+  context 'generate move' do
+    it 'returns a greedy move, based on value' do
+      expect(aiplayer).to receive(:make_greedy_move?).and_return(true)
+
+      expect(aiplayer_with_episode.generate_move).to eq(1)
+    end
+    it 'returns a random move' do
+      expect(aiplayer).to receive(:make_greedy_move?).and_return(false)
+      expect(Kernel).to receive(:rand).and_return(0.3)
+
+      expect(aiplayer_with_episode.generate_move).to eq(3)
+    end
   end
 
   context 'episode' do
@@ -58,8 +72,8 @@ describe AIPlayer do
     end
 
     context 'episode-state' do
-      it 'is an empty hash upon initialisation' do
-        expect(aiplayer_with_episode.episode.states).to eq({})
+      it 'is an empty array upon initialisation' do
+        expect(aiplayer_with_episode.episode.states).to eq([])
       end
 
       it 'adds the state to the episode after each move' do
@@ -69,7 +83,7 @@ describe AIPlayer do
           '0000000',
           '0000000',
           '0000000',
-          '000x000'
+          '0000000'
         ].join(' ')
 
         state2 = [
@@ -78,9 +92,9 @@ describe AIPlayer do
           '0000000',
           '0000000',
           '0000000',
-          '000xx00'
+          '000x000'
         ].join(' ')
-        expected_result = { state1 => 3, state2 => 4 }
+        expected_result = [ [state1, 3], [state2, 4] ]
 
         aiplayer_with_episode.make_move(4)
         aiplayer_with_episode.make_move(5)
@@ -90,7 +104,48 @@ describe AIPlayer do
   end
 
   context 'update' do
-    it 'updates the Q-learning after winning' do
+    it 'updates the Q-learning and the values after winning' do
+      q_expected_result1 = {
+        "0000000 0000000 0000000 0000000 0000000 0000000" => {0=>[1, 0.6141249999999999]},
+        "0000000 0000000 0000000 0000000 0000000 x000000" => {1=>[1, 0.7224999999999999]},
+        "0000000 0000000 0000000 0000000 0000000 xx00000" => {2=>[1, 0.85]},
+        "0000000 0000000 0000000 0000000 0000000 xxx0000" => {3=>[1, 1]}
+      }
+      q_expected_result2 = {
+        "0000000 0000000 0000000 0000000 0000000 0000000" => {0=>[2, 1.2282499999999998]},
+        "0000000 0000000 0000000 0000000 0000000 x000000" => {1=>[2, 1.4449999999999998]},
+        "0000000 0000000 0000000 0000000 0000000 xx00000" => {2=>[1, 0.85], 3=>[1, 0.85]},
+        "0000000 0000000 0000000 0000000 0000000 xx0x000" => {2=>[1, 1]},
+        "0000000 0000000 0000000 0000000 0000000 xxx0000" => {3=>[1, 1]}
+      }
+      q_expected_result3 = {
+        "0000000 0000000 0000000 0000000 0000000 0000000" => {0=>[2, 1.2282499999999998], 1=>[1, -0.85]},
+        "0000000 0000000 0000000 0000000 0000000 0x00000" => {0=>[1, -1]},
+        "0000000 0000000 0000000 0000000 0000000 x000000" => {1=>[2, 1.4449999999999998]},
+        "0000000 0000000 0000000 0000000 0000000 xx00000" => {2=>[1, 0.85], 3=>[1, 0.85]},
+        "0000000 0000000 0000000 0000000 0000000 xx0x000" => {2=>[1, 1]},
+        "0000000 0000000 0000000 0000000 0000000 xxx0000" => {3=>[1, 1]}
+      }
+
+      v_expected_result1 = {
+        "0000000 0000000 0000000 0000000 0000000 x000000" => 0.6141249999999999,
+        "0000000 0000000 0000000 0000000 0000000 xx00000" => 0.7224999999999999,
+        "0000000 0000000 0000000 0000000 0000000 xxx0000" => 0.85
+      }
+      v_expected_result2 = {
+        "0000000 0000000 0000000 0000000 0000000 x000000" => 0.6141249999999999,
+        "0000000 0000000 0000000 0000000 0000000 xx00000" => 0.7224999999999999,
+        "0000000 0000000 0000000 0000000 0000000 xx0x000" => 0.85,
+        "0000000 0000000 0000000 0000000 0000000 xxx0000" => 0.85
+      }
+      v_expected_result3 = {
+        "0000000 0000000 0000000 0000000 0000000 x000000" => 0.6141249999999999,
+        "0000000 0000000 0000000 0000000 0000000 0x00000" => -0.85,
+        "0000000 0000000 0000000 0000000 0000000 xx00000" => 0.7224999999999999,
+        "0000000 0000000 0000000 0000000 0000000 xx0x000" => 0.85,
+        "0000000 0000000 0000000 0000000 0000000 xxx0000" => 0.85
+      }
+
       player = aiplayer_with_episode
       player.make_move(1)
       player.make_move(2)
@@ -99,7 +154,39 @@ describe AIPlayer do
 
       player.update
 
-      expect(player.q_state).to eq({})
+      expect(player.q_states).to eq(q_expected_result1)
+      expect(player.v_states).to eq(v_expected_result1)
+
+      player.start_episode(Board.new)
+      player.make_move(1)
+      player.make_move(2)
+      player.make_move(4)
+      player.make_move(3)
+
+      player.update
+
+      expect(player.q_states).to eq(q_expected_result2)
+      expect(player.v_states).to eq(v_expected_result2)
+
+      player.start_episode(Board.new)
+
+      player2 = AIPlayer.new('o')
+      player2.start_episode(aiplayer.episode.board)
+
+      player.make_move(2)
+      player.make_move(1)
+      player2.make_move(3)
+      player2.make_move(3)
+      player2.make_move(3)
+      player2.make_move(3)
+
+      player.update
+      player2.update
+
+      puts player.episode.states if $verbose
+
+      expect(player.q_states).to eq(q_expected_result3)
+      expect(player.v_states).to eq(v_expected_result3)
     end
   end
 end

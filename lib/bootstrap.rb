@@ -1,4 +1,5 @@
-require 'aiplayer'
-require 'board'
-require 'game'
+require_relative './aiplayer'
+require_relative './human_player'
+require_relative './board'
+require_relative './game'
 require 'pry'
