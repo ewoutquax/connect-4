@@ -4,11 +4,14 @@ $verbose = false
 player1 = AIPlayer.new('x')
 player2 = AIPlayer.new('o')
 
+player1.load_state
+player2.load_state
+
 # $verbose = true
 # player2 = HumanPlayer.new('o')
 
 while true
-  10_000.times do |i|
+  50_000.times do |i|
     puts i if i%200 == 0
     board = Board.new
 
@@ -36,6 +39,9 @@ while true
 
     binding.pry if $verbose
   end
+
+  player1.save_state
+  player2.save_state
 
   $verbose = true
   player2 = HumanPlayer.new('o')

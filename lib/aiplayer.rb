@@ -15,6 +15,34 @@ class AIPlayer
     @epsilon = 0.05
   end
 
+  def save_state
+    f = File.open("q_state_player_#{@sign}.json", "w")
+    f.puts @q_states.to_json
+    f.close
+
+    f = File.open("v_state_player_#{@sign}.json", "w")
+    f.puts @v_states.to_json
+    f.close
+  end # /save_state
+
+  def load_state
+    @q_states = {}
+    f = File.open("q_state_player_#{@sign}.json")
+    temp = JSON.parse(f.gets)
+    f.close
+    temp.each do |state, values|
+      values.each do |move, more_values|
+        @q_states[state] ||= {}
+        @q_states[state][move.to_i] = more_values
+      end # /move, more_values
+    end # /key, some_data
+
+    @v_states = {}
+    f = File.open("v_state_player_#{@sign}.json")
+    @v_states = JSON.parse(f.gets)
+    f.close
+  end # /load_state
+
   def start_episode(board)
     raise ArgumentError, board.class.to_s unless board.is_a?(::Board)
 
@@ -24,7 +52,7 @@ class AIPlayer
   def generate_move
     moves = @episode.board.valid_moves
     if make_greedy_move?
-      _value, selected_move =
+      _value, selected_moves =
         moves.inject([nil, nil]) do |best_selected, move|
           best, selected = best_selected
 
@@ -35,12 +63,15 @@ class AIPlayer
           puts "Found move #{move} with value #{value}" if $verbose
 
           if best.nil? || best < value
-            [value, move]
+            [value, [move]]
+          elsif best == value
+            [value, selected << move]
           else
             [best, selected]
           end
         end # /move
-      selected_move
+      index = (Kernel.rand *  selected_moves.length).floor
+      selected_moves[index]
     else
       puts "make random move" if $verbose
       index = (Kernel.rand *  moves.length).floor
@@ -81,40 +112,36 @@ class AIPlayer
         # @q_states[state][move] = (1 - @alpha) * prev_value + @alpha * @gamma * (target - prev_value)
         # @q_states[state][move] = [counter + 1, prev_value + @gamma * (target - prev_value)]
         @q_states[state][move] = [counter + 1, prev_value + @gamma * target]
-
-        # max_mean =
-        #   @q_states[state].inject(nil) do |acc, (move, counter_value)|
-        #     counter, value = counter_value
-        #     mean = value / counter
-        #     if acc.nil?
-        #       mean
-        #     elsif acc < mean
-        #       mean
-        #     else
-        #       acc
-        #     end
-        #   end
-
         target *= @gamma
+
+        max_mean = nil
+        @q_states[state].each do |move, count_score|
+          count, score = count_score
+          current_mean = score / count
+          if max_mean.nil?  || max_mean < current_mean
+            max_mean = current_mean
+          end
+        end
+        @v_states[state] = max_mean
       end
 
-      board = Board.new(state)
-      board.make_move(move, @sign)
-      v_board_state = board.state
-      count, score = @q_states[state][move]
-      current_mean = score / count
-      if @v_states.key?(v_board_state)
-        puts "Previous v-state for #{v_board_state} is: #{@v_states[v_board_state]}" if $verbose
-        if @v_states[v_board_state] < current_mean
-          puts "v-state for #{v_board_state} is updated to: #{current_mean}" if $verbose
-          @v_states[v_board_state] = current_mean
-        else
-          puts "v-state for #{v_board_state} is NOT updated to: #{current_mean}" if $verbose
-        end
-      else
-        puts "v-state for new #{v_board_state} is set to: #{current_mean}" if $verbose
-        @v_states[v_board_state] = current_mean
-      end
+      # board = Board.new(state)
+      # board.make_move(move, @sign)
+      # v_board_state = board.state
+      # count, score = @q_states[state][move]
+      # current_mean = score / count
+      # if @v_states.key?(v_board_state)
+      #   puts "Previous v-state for #{v_board_state} is: #{@v_states[v_board_state]}" if $verbose
+      #   if @v_states[v_board_state] < current_mean
+      #     puts "v-state for #{v_board_state} is updated to: #{current_mean}" if $verbose
+      #     @v_states[v_board_state] = current_mean
+      #   else
+      #     puts "v-state for #{v_board_state} is NOT updated to: #{current_mean}" if $verbose
+      #   end
+      # else
+      #   puts "v-state for new #{v_board_state} is set to: #{current_mean}" if $verbose
+      #   @v_states[v_board_state] = current_mean
+      # end
     end
   end
 
@@ -135,8 +162,8 @@ class AIPlayer
     end
 
     def make_move(column, sign)
-      @states << [@board.state, column]
       @board.make_move(column, sign)
+      @states << [@board.state, column]
     end # /make_move
   end
 end
