@@ -1,17 +1,28 @@
 require_relative './bootstrap'
 
 $verbose = false
-player1 = AIPlayer.new('x')
-player2 = AIPlayer.new('o')
+# player1 = AIPlayer.new('x')
+# player2 = AIPlayer.new('o')
+#
+# player1.load_state
+# player2.load_state
 
-player1.load_state
-player2.load_state
-
-# $verbose = true
-# player2 = HumanPlayer.new('o')
+$verbose = true
 
 while true
-  50_000.times do |i|
+  5_000.times do |i|
+    puts "you wanna go first (Y/n)"
+    choice = $stdin.gets.chomp
+    if choice == 'n'
+      player1 = AIPlayer.new('x')
+      player2 = HumanPlayer.new('o')
+      player1.load_state
+    else
+      player1 = HumanPlayer.new('x')
+      player2 = AIPlayer.new('o')
+      player2.load_state
+    end
+
     puts i if i%200 == 0
     board = Board.new
 
@@ -37,7 +48,10 @@ while true
     player1.update
     player2.update
 
-    binding.pry if $verbose
+    player1.save_state
+    player2.save_state
+
+    # binding.pry if $verbose
   end
 
   player1.save_state

@@ -12,7 +12,7 @@ class Board
 
   def draw
     @rows.each do |row|
-      puts row.split(//).join(' | ').gsub('0', '.')
+      puts row.split(//).join(' | ').gsub('0', '.').upcase
     end # /row
     puts '-------------------------'
     puts '1 | 2 | 3 | 4 | 5 | 6 | 7'

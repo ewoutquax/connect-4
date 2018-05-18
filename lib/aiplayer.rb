@@ -51,6 +51,59 @@ class AIPlayer
 
   def generate_move
     moves = @episode.board.valid_moves
+
+    if @episode.allow_exploration
+      $verbose = false
+      puts "Checking for exploration"
+
+      other_sign = @sign == 'x' ? 'o' : 'x'
+      dummy_player = AIPlayer.new(other_sign)
+      moves.each_with_index do |master_move, index|
+        # puts "Starting for nil-values for move #{index} out of #{moves.size}"
+
+        board = Board.new(@episode.board.state)
+        board.make_move(master_move - 1, @sign)
+
+        unless @v_states.key?(board.state)
+          # puts "v-state 0 for state #{board.state}"
+          puts "Starting for nil-values for move #{index} out of #{moves.size}"
+          orig_episode = @episode
+
+          200.times do |i|
+            # puts "Starting test-episode #{i}" if i%10 == 0
+
+            board = Board.new(orig_episode.board.state)
+            dummy_player.start_episode(board)
+            dummy_player.episode.set_allow_exploration(false)
+            self.start_episode(board)
+            @episode.set_allow_exploration(false)
+            @episode.set_states(orig_episode.states)
+            @episode.make_move(master_move - 1, @sign)
+
+            current_player = self
+            begin
+              current_player =
+                if current_player == self
+                  dummy_player
+                else
+                  self
+                end
+
+              move = current_player.generate_move
+              # puts "Player #{current_player.sign} chooses: #{move}" if $verbose
+              current_player.make_move(move)
+              board.draw if $verbose
+            end until board.winner?(current_player.sign) || board.full?
+
+            self.update()
+            dummy_player.update()
+          end
+          @episode = orig_episode
+        end
+      end
+      $verbose = true
+    end
+
     if make_greedy_move?
       _value, selected_moves =
         moves.inject([nil, nil]) do |best_selected, move|
@@ -70,6 +123,7 @@ class AIPlayer
             [best, selected]
           end
         end # /move
+
       index = (Kernel.rand *  selected_moves.length).floor
       selected_moves[index]
     else
@@ -152,14 +206,23 @@ class AIPlayer
     end
 
   class Episode
-    attr_reader :board, :states
+    attr_reader :board, :states, :allow_exploration
 
     def initialize(board)
       raise ArgumentError, board.class.to_s unless board.is_a?(::Board)
 
       @board = board
       @states = []
+      set_allow_exploration(true)
     end
+
+    def set_states(states)
+      @states = states.dup
+    end # /set_states(states)
+
+    def set_allow_exploration(value)
+      @allow_exploration = value
+    end # /set_allow_exploration(value)
 
     def make_move(column, sign)
       @board.make_move(column, sign)

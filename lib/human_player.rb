@@ -25,6 +25,14 @@ class HumanPlayer
     nil
   end
 
+  def save_state
+    nil
+  end # /save_state
+
+  def load_state
+    nil
+  end # /load_state
+
   private
 
   class Episode
