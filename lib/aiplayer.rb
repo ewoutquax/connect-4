@@ -1,5 +1,6 @@
-class AIPlayer
-  attr_reader :sign, :episode, :q_states, :v_states
+class AIPlayer < Player
+  attr_reader :sign, :q_states, :v_states, :alpha, :epsilon
+  attr_accessor :episode
 
   def initialize(sign)
     raise ArgumentError, sign.class.to_s unless sign.is_a?(::String)
@@ -9,11 +10,18 @@ class AIPlayer
     @q_states = {}
     @v_states = {}
 
-
-    @alpha = 0.1
+    @alpha = 0.7
+    @epsilon = 0
     @gamma = 0.85
-    @epsilon = 0.05
   end
+
+  def set_alpha(alpha)
+    @alpha = alpha
+  end # /set_alpha
+
+  def set_epsilon(epsilon)
+    @epsilon = epsilon
+  end # /set_epsilon
 
   def save_state
     f = File.open("q_state_player_#{@sign}.json", "w")
@@ -26,6 +34,7 @@ class AIPlayer
   end # /save_state
 
   def load_state
+    puts "loading start"
     @q_states = {}
     f = File.open("q_state_player_#{@sign}.json")
     temp = JSON.parse(f.gets)
@@ -41,6 +50,7 @@ class AIPlayer
     f = File.open("v_state_player_#{@sign}.json")
     @v_states = JSON.parse(f.gets)
     f.close
+    puts "loading complete"
   end # /load_state
 
   def start_episode(board)
@@ -58,47 +68,11 @@ class AIPlayer
 
       other_sign = @sign == 'x' ? 'o' : 'x'
       dummy_player = AIPlayer.new(other_sign)
-      moves.each_with_index do |master_move, index|
-        # puts "Starting for nil-values for move #{index} out of #{moves.size}"
-
+      moves.each_with_index do |move, index|
         board = Board.new(@episode.board.state)
-        board.make_move(master_move - 1, @sign)
-
+        board.make_move(move - 1, @sign)
         unless @v_states.key?(board.state)
-          # puts "v-state 0 for state #{board.state}"
-          puts "Starting for nil-values for move #{index} out of #{moves.size}"
-          orig_episode = @episode
-
-          200.times do |i|
-            # puts "Starting test-episode #{i}" if i%10 == 0
-
-            board = Board.new(orig_episode.board.state)
-            dummy_player.start_episode(board)
-            dummy_player.episode.set_allow_exploration(false)
-            self.start_episode(board)
-            @episode.set_allow_exploration(false)
-            @episode.set_states(orig_episode.states)
-            @episode.make_move(master_move - 1, @sign)
-
-            current_player = self
-            begin
-              current_player =
-                if current_player == self
-                  dummy_player
-                else
-                  self
-                end
-
-              move = current_player.generate_move
-              # puts "Player #{current_player.sign} chooses: #{move}" if $verbose
-              current_player.make_move(move)
-              board.draw if $verbose
-            end until board.winner?(current_player.sign) || board.full?
-
-            self.update()
-            dummy_player.update()
-          end
-          @episode = orig_episode
+          Game.start_training_for_player(self, move)
         end
       end
       $verbose = true
@@ -127,7 +101,7 @@ class AIPlayer
       index = (Kernel.rand *  selected_moves.length).floor
       selected_moves[index]
     else
-      puts "make random move" if $verbose
+      puts "Random move?!?" if $verbose
       index = (Kernel.rand *  moves.length).floor
       moves[index]
     end
@@ -145,57 +119,28 @@ class AIPlayer
     elsif board.full? || board.winner?(other_sign)
       -1
     else
-      @rewards[@episode.board] || 0
+      @rewards[@episode.board] || 1
     end
   end # /reward
 
   def update
-    target = reward
-    first = true
+    target = reward / @gamma
 
     @episode.states.reverse.each do |state, move|
-      if first
-        first = false
-        @q_states[state] ||= {}
-        @q_states[state][move] ||= [0, 0]
-        counter, score = @q_states[state][move]
-        @q_states[state][move] = [counter + 1, score + target]
-      else
-        @q_states[state] ||= {}
-        counter, prev_value = @q_states[state][move] || [0, 0]
-        # @q_states[state][move] = (1 - @alpha) * prev_value + @alpha * @gamma * (target - prev_value)
-        # @q_states[state][move] = [counter + 1, prev_value + @gamma * (target - prev_value)]
-        @q_states[state][move] = [counter + 1, prev_value + @gamma * target]
-        target *= @gamma
+      @q_states[state] ||= {}
+      counter, prev_value = @q_states[state][move] || [0, 0]
+      @q_states[state][move] = [counter + 1, prev_value + @gamma * target]
+      target *= @gamma
 
-        max_mean = nil
-        @q_states[state].each do |move, count_score|
-          count, score = count_score
-          current_mean = score / count
-          if max_mean.nil?  || max_mean < current_mean
-            max_mean = current_mean
-          end
+      max_mean = nil
+      @q_states[state].each do |move, count_score|
+        count, score = count_score
+        current_mean = score / count
+        if max_mean.nil?  || max_mean < current_mean
+          max_mean = current_mean
         end
-        @v_states[state] = max_mean
       end
-
-      # board = Board.new(state)
-      # board.make_move(move, @sign)
-      # v_board_state = board.state
-      # count, score = @q_states[state][move]
-      # current_mean = score / count
-      # if @v_states.key?(v_board_state)
-      #   puts "Previous v-state for #{v_board_state} is: #{@v_states[v_board_state]}" if $verbose
-      #   if @v_states[v_board_state] < current_mean
-      #     puts "v-state for #{v_board_state} is updated to: #{current_mean}" if $verbose
-      #     @v_states[v_board_state] = current_mean
-      #   else
-      #     puts "v-state for #{v_board_state} is NOT updated to: #{current_mean}" if $verbose
-      #   end
-      # else
-      #   puts "v-state for new #{v_board_state} is set to: #{current_mean}" if $verbose
-      #   @v_states[v_board_state] = current_mean
-      # end
+      @v_states[state] = max_mean
     end
   end
 

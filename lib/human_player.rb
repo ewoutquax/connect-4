@@ -1,4 +1,4 @@
-class HumanPlayer
+class HumanPlayer < Player
   attr_reader :sign, :episode, :q_states, :v_states
 
   def initialize(sign)
