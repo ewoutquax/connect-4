@@ -1,5 +1,8 @@
 class AIPlayer < Player
-  attr_reader :sign, :q_states, :v_states, :alpha, :epsilon
+  class VState < Sequel::Model; end
+  class QState < Sequel::Model; end
+
+  attr_reader :sign, :alpha, :epsilon
   attr_accessor :episode
 
   def initialize(sign)
@@ -7,11 +10,11 @@ class AIPlayer < Player
 
     @sign = sign
     @rewards = {}
-    @q_states = {}
-    @v_states = {}
 
     @alpha = 0.7
     @epsilon = 0
+    @v_states = {}
+    @q_states = {}
     @gamma = 0.85
   end
 
@@ -23,36 +26,6 @@ class AIPlayer < Player
     @epsilon = epsilon
   end # /set_epsilon
 
-  def save_state
-    f = File.open("q_state_player_#{@sign}.json", "w")
-    f.puts @q_states.to_json
-    f.close
-
-    f = File.open("v_state_player_#{@sign}.json", "w")
-    f.puts @v_states.to_json
-    f.close
-  end # /save_state
-
-  def load_state
-    puts "loading start"
-    @q_states = {}
-    f = File.open("q_state_player_#{@sign}.json")
-    temp = JSON.parse(f.gets)
-    f.close
-    temp.each do |state, values|
-      values.each do |move, more_values|
-        @q_states[state] ||= {}
-        @q_states[state][move.to_i] = more_values
-      end # /move, more_values
-    end # /key, some_data
-
-    @v_states = {}
-    f = File.open("v_state_player_#{@sign}.json")
-    @v_states = JSON.parse(f.gets)
-    f.close
-    puts "loading complete"
-  end # /load_state
-
   def start_episode(board)
     raise ArgumentError, board.class.to_s unless board.is_a?(::Board)
 
@@ -62,12 +35,28 @@ class AIPlayer < Player
   def generate_move
     moves = @episode.board.valid_moves
 
+    if @q_states[@episode.board.state].nil?
+      # puts "Found no state for #{@episode.board.state}"
+
+      max_mean = nil
+      QState.where(state: @episode.board.state).each do |q_state|
+        @q_states[q_state.state] ||= {}
+        @q_states[q_state.state][q_state.move] = [q_state.counter, q_state.value]
+        current_mean = q_state.value / q_state.counter
+        if max_mean.nil?  || max_mean < current_mean
+          max_mean = current_mean
+        end
+      end # /do q_state
+      if max_mean
+        @v_states[@episode.board.state] = max_mean
+      end
+    end
+
     if @episode.allow_exploration
       $verbose = false
       puts "Checking for exploration"
 
       other_sign = @sign == 'x' ? 'o' : 'x'
-      dummy_player = AIPlayer.new(other_sign)
       moves.each_with_index do |move, index|
         board = Board.new(@episode.board.state)
         board.make_move(move - 1, @sign)
@@ -85,6 +74,7 @@ class AIPlayer < Player
 
           board = Board.new(@episode.board.state)
           board.make_move(move - 1, @sign)
+
           value = @v_states[board.state] || 0
 
           puts "Found move #{move} with value #{value}" if $verbose
@@ -98,11 +88,11 @@ class AIPlayer < Player
           end
         end # /move
 
-      index = (Kernel.rand *  selected_moves.length).floor
+      index = (Kernel.rand * selected_moves.length).floor
       selected_moves[index]
     else
-      puts "Random move?!?" if $verbose
-      index = (Kernel.rand *  moves.length).floor
+      puts 'Random move?!?' if $verbose
+      index = (Kernel.rand * moves.length).floor
       moves[index]
     end
   end # /generate_move
@@ -119,7 +109,7 @@ class AIPlayer < Player
     elsif board.full? || board.winner?(other_sign)
       -1
     else
-      @rewards[@episode.board] || 1
+      @v_states[@episode.board.state] || 0
     end
   end # /reward
 
@@ -141,8 +131,39 @@ class AIPlayer < Player
         end
       end
       @v_states[state] = max_mean
-    end
+    end # /do state, move
   end
+
+  def save_q_states
+    puts "Saving #{@q_states.size} states"
+    index = 0
+    @q_states.each do |state, moves|
+      index += 1
+      puts index if index%100 == 0
+      moves.each do |move, counter_value|
+        counter, value = counter_value
+
+        q_state =
+          QState.first(state: state, move: move) ||
+          QState.new(state: state, move: move)
+        q_state.update(
+          counter: counter,
+          value:   value
+        )
+      end # /do move, counter_value
+    end # /do state, moves
+
+    @q_states = {}
+
+    # @v_states.each do |state, value|
+    #   v_state =
+    #     VState.first(state: state) ||
+    #     VState.new(
+    #       state: state
+    #     )
+    #   v_state.update(value: value)
+    # end # /do state, value
+  end # /save_q_states
 
   private
 

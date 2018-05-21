@@ -21,18 +21,6 @@ class HumanPlayer < Player
     @episode.make_move(column - 1, @sign)
   end # /make_move
 
-  def update
-    nil
-  end
-
-  def save_state
-    nil
-  end # /save_state
-
-  def load_state
-    nil
-  end # /load_state
-
   private
 
   class Episode
@@ -47,5 +35,9 @@ class HumanPlayer < Player
     def make_move(column, sign)
       @board.make_move(column, sign)
     end # /make_move
+
+    def set_allow_exploration(_value)
+      nil
+    end # /set_allow_exploration
   end
 end
