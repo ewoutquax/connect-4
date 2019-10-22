@@ -1,34 +1,29 @@
-require_relative './bootstrap'
+require_relative './bootstrapper'
 
-$verbose = false
-$verbose = true
+ai_player_x = Player::AI.new('x')
+ai_player_o = Player::AI.new('o')
 
-player_x = AIPlayer.new('x')
-player_o = AIPlayer.new('o')
+# ai_player_x.set_alpha(0.6)
+# ai_player_x.set_epsilon(0.0)
+# ai_player_o.set_alpha(0.6)
+# ai_player_o.set_epsilon(0.0)
 
-$verbose = false
-# player_x.set_alpha(0.1)
-# player_x.set_epsilon(0.5)
-# player_o.set_alpha(0.1)
- player_o.set_epsilon(0.5)
-# Game.new(player_x, player_o, false).normal_game(50_000)
-$verbose = true
-
-player_x.set_alpha(0.6)
-player_x.set_epsilon(0.0)
-player_o.set_alpha(0.6)
-player_o.set_epsilon(0.0)
+# 1_000.times do |index|
+#   index%100 == 0 && puts("Playing game #{index}")
+#
+#   Game.new(Board.new, ai_player_x, ai_player_o).play
+# end # /index
 
 while true
   puts 'you wanna go first (Y/n)'
   choice = $stdin.gets.chomp
   if choice == 'n'
-    player1 = player_x
-    player2 = HumanPlayer.new('o')
+    player1 = ai_player_x
+    player2 = Player::Human.new('o')
   else
-    player1 = HumanPlayer.new('x')
-    player2 = player_o
+    player1 = Player::Human.new('x')
+    player2 = ai_player_o
   end
 
-  Game.new(player1, player2, true).normal_game(1)
+  Game.new(Board.new, player1, player2).play
 end

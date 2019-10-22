@@ -13,7 +13,22 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+
+require 'simplecov'
+SimpleCov.start do
+  add_filter "/spec/"
+end
+
 RSpec.configure do |config|
+  config.before(:all) do
+    $log_level = :debug
+    $test_env  = true
+  end
+
+  config.before(:each) do
+    Database.connection.flushdb
+  end
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

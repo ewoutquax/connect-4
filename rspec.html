@@ -281,156 +281,18 @@ a {
 <div class="results">
 <div id="div_group_1" class="example_group passed">
   <dl style="margin-left: 0px;">
-  <dt id="example_group_1" class="passed">AIPlayer</dt>
-    <script type="text/javascript">moveProgressBar('4.3');</script>
-    <dd class="example passed"><span class="passed_spec_name">can be instantiated</span><span class='duration'>0.00056s</span></dd>
-    <script type="text/javascript">moveProgressBar('8.6');</script>
-    <dd class="example passed"><span class="passed_spec_name">has a sign</span><span class='duration'>0.00063s</span></dd>
-    <script type="text/javascript">makeRed('rspec-header');</script>
-    <script type="text/javascript">makeRed('div_group_1');</script>
-    <script type="text/javascript">makeRed('example_group_1');</script>
-    <script type="text/javascript">moveProgressBar('13.0');</script>
-    <dd class="example failed">
-      <span class="failed_spec_name">q-learning is empty</span>
-      <span class="duration">0.00930s</span>
-      <div class="failure" id="failure_1">
-        <div class="message"><pre>  Failure/Error: [0m[32mexpect[0m(aiplayer.q_state).to eq({})
-
-    expected: {}
-         got: nil
-
-    (compared using ==)
-  # ./spec/aiplayer_spec.rb:17:in `block (2 levels) in &lt;top (required)&gt;&#39;</pre></div>
-        <div class="backtrace"><pre>./spec/aiplayer_spec.rb:17:in `block (2 levels) in &lt;top (required)&gt;&#39;</pre></div>
-    <pre class="ruby"><code><span class="linenum">15</span>
-<span class="linenum">16</span>  <span class="keyword">it</span> <span class="string"><span class="delimiter">'</span><span class="content">q-learning is empty</span><span class="delimiter">'</span></span> <span class="keyword">do</span>
-<span class="offending"><span class="linenum">17</span>    <span class="keyword">expect</span>(aiplayer.q_state).to eq({})</span>
-<span class="linenum">18</span>  <span class="keyword">end</span></code></pre>
-      </div>
-    </dd>
+  <dt id="example_group_1" class="passed">Arbiter::GameEnd</dt>
   </dl>
 </div>
 <div id="div_group_2" class="example_group passed">
   <dl style="margin-left: 15px;">
-  <dt id="example_group_2" class="passed">episode</dt>
-    <script type="text/javascript">moveProgressBar('17.3');</script>
-    <dd class="example passed"><span class="passed_spec_name">can start a new episode</span><span class='duration'>0.00025s</span></dd>
-    <script type="text/javascript">moveProgressBar('21.7');</script>
-    <dd class="example passed"><span class="passed_spec_name">can make a move on the board</span><span class='duration'>0.00018s</span></dd>
-  </dl>
-</div>
-<div id="div_group_3" class="example_group passed">
-  <dl style="margin-left: 30px;">
-  <dt id="example_group_3" class="passed">rewards</dt>
-    <script type="text/javascript">moveProgressBar('26.0');</script>
-    <dd class="example passed"><span class="passed_spec_name">gets a default reward of 0 for a state</span><span class='duration'>0.00022s</span></dd>
-    <script type="text/javascript">moveProgressBar('30.4');</script>
-    <dd class="example passed"><span class="passed_spec_name">gets a reward of 1 for a winning state</span><span class='duration'>0.00028s</span></dd>
-  </dl>
-</div>
-<div id="div_group_4" class="example_group passed">
-  <dl style="margin-left: 30px;">
-  <dt id="example_group_4" class="passed">episode-state</dt>
-    <script type="text/javascript">moveProgressBar('34.7');</script>
-    <dd class="example passed"><span class="passed_spec_name">is an empty hash upon initialisation</span><span class='duration'>0.00020s</span></dd>
-    <script type="text/javascript">moveProgressBar('39.1');</script>
-    <dd class="example passed"><span class="passed_spec_name">adds the state to the episode after each move</span><span class='duration'>0.00021s</span></dd>
-  </dl>
-</div>
-<div id="div_group_5" class="example_group passed">
-  <dl style="margin-left: 15px;">
-  <dt id="example_group_5" class="passed">update</dt>
-    <script type="text/javascript">makeRed('div_group_5');</script>
-    <script type="text/javascript">makeRed('example_group_5');</script>
-    <script type="text/javascript">moveProgressBar('43.4');</script>
-    <dd class="example failed">
-      <span class="failed_spec_name">updates the Q-learning after winning</span>
-      <span class="duration">0.00023s</span>
-      <div class="failure" id="failure_2">
-        <div class="message"><pre>  Failure/Error:
-    [0m@episode.states.reverse.each [32mdo[0m |state, move|
-      [0m[32mif[0m first
-        [0mfirst = [1;36mfalse[0m
-        [0m@q_states[state] = [1;34m0[0m
-      [0m[32melse[0m
-        [0m@q_states[state] ||= {}
-        [0mprev_value = @q_states[state][move] || [1;34m0[0m
-        [0m@state[state][move] = prev_value + [1;34;4mGAMMA[0m * (final_reward - prev_value)
-      [0m[32mend[0m
-
-  NoMethodError:
-    undefined method `reverse&#39; for #&lt;Hash:0x007fa3f7bbbdc0&gt;
-  # ./lib/aiplayer.rb:35:in `update&#39;
-  # ./spec/aiplayer_spec.rb:100:in `block (3 levels) in &lt;top (required)&gt;&#39;</pre></div>
-        <div class="backtrace"><pre>./lib/aiplayer.rb:35:in `update&#39;
-./spec/aiplayer_spec.rb:100:in `block (3 levels) in &lt;top (required)&gt;&#39;</pre></div>
-    <pre class="ruby"><code><span class="linenum">33</span>    final_reward = reward
-<span class="linenum">34</span>    first = <span class="predefined-constant">true</span>
-<span class="offending"><span class="linenum">35</span>    <span class="instance-variable">@episode</span>.states.reverse.each <span class="keyword">do</span> |state, move|</span>
-<span class="linenum">36</span>      <span class="keyword">if</span> first
-<span class="linenum">37</span>        first = <span class="predefined-constant">false</span></code></pre>
-      </div>
-    </dd>
-  </dl>
-</div>
-<div id="div_group_6" class="example_group passed">
-  <dl style="margin-left: 0px;">
-  <dt id="example_group_6" class="passed">Board</dt>
-    <script type="text/javascript">moveProgressBar('47.8');</script>
-    <dd class="example passed"><span class="passed_spec_name">can be instantiated</span><span class='duration'>0.00015s</span></dd>
-    <script type="text/javascript">moveProgressBar('52.1');</script>
-    <dd class="example passed"><span class="passed_spec_name">has a state</span><span class='duration'>0.00013s</span></dd>
-    <script type="text/javascript">moveProgressBar('56.5');</script>
-    <dd class="example passed"><span class="passed_spec_name">can accept a state a new-parameter</span><span class='duration'>0.00015s</span></dd>
-  </dl>
-</div>
-<div id="div_group_7" class="example_group passed">
-  <dl style="margin-left: 15px;">
-  <dt id="example_group_7" class="passed">valid moves</dt>
-    <script type="text/javascript">moveProgressBar('60.8');</script>
-    <dd class="example passed"><span class="passed_spec_name">returns all 7 rows for a new game</span><span class='duration'>0.00015s</span></dd>
-    <script type="text/javascript">moveProgressBar('65.2');</script>
-    <dd class="example passed"><span class="passed_spec_name">skips columns that are full</span><span class='duration'>0.00014s</span></dd>
-  </dl>
-</div>
-<div id="div_group_8" class="example_group passed">
-  <dl style="margin-left: 15px;">
-  <dt id="example_group_8" class="passed">make move</dt>
-    <script type="text/javascript">moveProgressBar('69.5');</script>
-    <dd class="example passed"><span class="passed_spec_name">first sign in a columns will end up in the bottom row</span><span class='duration'>0.00020s</span></dd>
-  </dl>
-</div>
-<div id="div_group_9" class="example_group passed">
-  <dl style="margin-left: 15px;">
-  <dt id="example_group_9" class="passed">ended</dt>
-  </dl>
-</div>
-<div id="div_group_10" class="example_group passed">
-  <dl style="margin-left: 30px;">
-  <dt id="example_group_10" class="passed">can determine x as the winner</dt>
-    <script type="text/javascript">moveProgressBar('73.9');</script>
-    <dd class="example passed"><span class="passed_spec_name">returns false for an initial board</span><span class='duration'>0.00025s</span></dd>
-    <script type="text/javascript">moveProgressBar('78.2');</script>
-    <dd class="example passed"><span class="passed_spec_name">returns true for 4 x-s horizontal</span><span class='duration'>0.00030s</span></dd>
-    <script type="text/javascript">moveProgressBar('82.6');</script>
-    <dd class="example passed"><span class="passed_spec_name">returns true for 4 x-s vertical</span><span class='duration'>0.00022s</span></dd>
-    <script type="text/javascript">moveProgressBar('86.9');</script>
-    <dd class="example passed"><span class="passed_spec_name">returns true for 4 x-s backwards diagonal</span><span class='duration'>0.00022s</span></dd>
-    <script type="text/javascript">moveProgressBar('91.3');</script>
-    <dd class="example passed"><span class="passed_spec_name">returns true for 4 x-s backwards diagonal</span><span class='duration'>0.00028s</span></dd>
-  </dl>
-</div>
-<div id="div_group_11" class="example_group passed">
-  <dl style="margin-left: 30px;">
-  <dt id="example_group_11" class="passed">full board</dt>
-    <script type="text/javascript">moveProgressBar('95.6');</script>
-    <dd class="example passed"><span class="passed_spec_name">returns false for an initial state</span><span class='duration'>0.00013s</span></dd>
+  <dt id="example_group_2" class="passed">end of game</dt>
     <script type="text/javascript">moveProgressBar('100.0');</script>
-    <dd class="example passed"><span class="passed_spec_name">returns true for a full state</span><span class='duration'>0.00016s</span></dd>
+    <dd class="example passed"><span class="passed_spec_name">returns true when player-1 has won</span><span class='duration'>0.00396s</span></dd>
   </dl>
 </div>
-<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>0.07083 seconds</strong>";</script>
-<script type="text/javascript">document.getElementById('totals').innerHTML = "23 examples, 2 failures";</script>
+<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>0.00465 seconds</strong>";</script>
+<script type="text/javascript">document.getElementById('totals').innerHTML = "1 example, 0 failures";</script>
 </div>
 </div>
 </body>

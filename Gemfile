@@ -4,6 +4,10 @@ source 'https://rubygems.org'
 
 gem 'binding_of_caller'
 gem 'pry'
+
+gem 'json'
+gem 'logger'
+gem 'redis'
+
 gem 'rspec'
-gem 'sequel'
-gem 'sqlite3'
+gem "simplecov"
