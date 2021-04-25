@@ -12,10 +12,13 @@ RSpec.describe Player::AI do
   end
 
   context 'score per move' do
-    let(:db_conn) { Database.connection }
     let(:board)   { Board.new }
     let(:player)  { Player::AI.new('x') }
     let(:game)    { Game.new(board, player, player) }
+
+    before do
+      allow(game).to receive(:training?).and_return(true)
+    end
 
     it 'returns a list of each move, with a default score of 0 for new board states' do
       valid_positions = Arbiter::ValidMoves.new(board).find(player.sign)
@@ -34,7 +37,7 @@ RSpec.describe Player::AI do
         counter: 100
       }.to_json
 
-      db_conn.hset(Database.name, state, value)
+      Database.set(state, value)
 
       valid_positions = Arbiter::ValidMoves.new(board).find(player.sign)
       moves_with_score = Player::AI::Generator::Move.new(game).append_moves_with_scores(valid_positions, player)
@@ -57,6 +60,10 @@ RSpec.describe Player::AI do
     let(:player) { build_full_player }
     let(:game) { Game.new(board, player, player) }
 
+    before do
+      expect(player).to receive(:random_move?).and_return(false)
+    end
+
     it 'returns the one single valid move with the highest score' do
       generator = double(Player::AI::Generator::Move, append_moves_with_scores: {"c4"=>0.1, "d3"=>0, "e6"=>0, "f5"=>0})
       allow(Player::AI::Generator::Move).to receive(:new).and_return(generator)
@@ -78,7 +85,7 @@ RSpec.describe Player::AI do
       generator = double(Player::AI::Generator::Move, append_moves_with_scores: {"f5"=>0})
       allow(Player::AI::Generator::Move).to receive(:new).and_return(generator)
 
-      expect { player.get_valid_move(game) }.to output("Chosen move: 'f5'\n").to_stdout
+      expect { player.get_valid_move(game) }.to output("AI-player 'w' chooses: 'f5'\n").to_stdout
     end
   end
 
@@ -100,14 +107,14 @@ RSpec.describe Player::AI do
       }
       player.update(1, states)
 
-      result = Database.connection.hgetall(Database.name)
+      result = Database.getall
       expect(result).to eq(expected_result)
     end
 
     it 'updates the board-states in the database, with their occurences and their discounted scores' do
-      Database.connection.hset(Database.name, 'a', '{"score":0.7,"counter":1}')
-      Database.connection.hset(Database.name, 'b', '{"score":1,"counter":1}')
-      Database.connection.hset(Database.name, 'c', 'dummy-entry')
+      Database.set('a', '{"score":0.7,"counter":1}')
+      Database.set('b', '{"score":1,"counter":1}')
+      Database.set('c', 'dummy-entry')
 
       states = ['a', 'b']
       expected_result = {
@@ -117,7 +124,7 @@ RSpec.describe Player::AI do
       }
       player.update(1, states)
 
-      result = Database.connection.hgetall(Database.name)
+      result = Database.getall
       expect(result).to eq(expected_result)
     end
   end

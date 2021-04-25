@@ -16,10 +16,10 @@ describe Arbiter::Win do
     it 'returns true for 4 x-s horizontal' do
       state = [
         0,0,0,0,0, (
-          1 * 3 ** 0 +
-          1 * 3 ** 1 +
-          1 * 3 ** 2 +
-          1 * 3 ** 3
+          1 * 3**0 +
+          1 * 3**1 +
+          1 * 3**2 +
+          1 * 3**3
         )].to_json
 
       assert_win_for_state(state)
@@ -29,10 +29,10 @@ describe Arbiter::Win do
       state = [
         0,
         0,
-        1 * 3 ** 0,
-        1 * 3 ** 0,
-        1 * 3 ** 0,
-        1 * 3 ** 0
+        1 * 3**0,
+        1 * 3**0,
+        1 * 3**0,
+        1 * 3**0
       ].to_json
 
       assert_win_for_state(state)
@@ -42,10 +42,10 @@ describe Arbiter::Win do
       state = [
         0,
         0,
-        1 * 3 ** 0,
-        1 * 3 ** 1,
-        1 * 3 ** 2,
-        1 * 3 ** 3
+        1 * 3**0,
+        1 * 3**1,
+        1 * 3**2,
+        1 * 3**3
       ].to_json
 
       assert_win_for_state(state)
@@ -55,10 +55,10 @@ describe Arbiter::Win do
       state = [
         0,
         0,
-        1 * 3 ** 3,
-        1 * 3 ** 2,
-        1 * 3 ** 1,
-        1 * 3 ** 0
+        1 * 3**3,
+        1 * 3**2,
+        1 * 3**1,
+        1 * 3**0
       ].to_json
 
       assert_win_for_state(state)

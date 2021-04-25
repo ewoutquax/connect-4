@@ -4,9 +4,19 @@ module Player
 
     def initialize(sign)
       @sign = sign
+
+      @alpha   = 0.8
+      @gamma   = 0.85
+      @epsilon = 1
     end
 
-    def update(score, _states)
+    def draw_board_before_make_move?
+      true
+    end # /draw_board_before_make_move?
+
+    def update(score, states)
+      super(score, states)
+
       if score == 1
         puts "You won!"
       else

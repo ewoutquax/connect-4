@@ -1,5 +1,5 @@
 class Game
-  attr_reader :board, :player_1, :player_2, :active_player, :states
+  attr_reader :board, :player_1, :player_2, :active_player, :states, :single_round
 
   def initialize(board, player_1, player_2)
     raise ArgumentError, board.class.to_s unless board.is_a?(::Board)
@@ -18,10 +18,14 @@ class Game
     }
   end
 
+  def set_states(states)
+    @states = states
+  end # /set_states
+
   def play
     active_player_next_round
 
-    while !ended?
+    until ended?
       play_round
       active_player_next_round
     end
@@ -49,6 +53,10 @@ class Game
   def set_active_player(player)
     @active_player = player
   end
+
+  def allow_training?
+    true
+  end # /allow_training?
 
   private
 
@@ -82,7 +90,7 @@ class Game
     end # /initialize
 
     def play
-      @drawer.exec(@game.active_player)
+      active_player.draw_board_before_make_move? && @drawer.exec(active_player)
 
       move = active_player.get_valid_move(@game)
       make_move(move)

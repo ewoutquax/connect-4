@@ -26,7 +26,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each) do
-    Database.connection.flushdb
+    Database.flushdb
   end
 
   # rspec-expectations config goes here. You can use an alternate
