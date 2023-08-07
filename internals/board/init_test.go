@@ -16,9 +16,9 @@ func TestEmptyBoard(t *testing.T) {
 	boardType := fmt.Sprintf("%s", reflect.TypeOf(board))
 
 	assert.Equal("board.Board", boardType)
-	assert.Equal(6, len(board.Line))
+	assert.Equal(7, len(board.Line))
 
-	for idx := 0; idx < 6; idx++ {
-		assert.Equal(7, len(board.Line[idx]))
+	for idx := 0; idx < 7; idx++ {
+		assert.Equal(6, len(board.Line[idx]))
 	}
 }

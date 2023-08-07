@@ -10,5 +10,5 @@ func TestMove(t *testing.T) {
 	myBoard := Init()
 	myBoard.MakeMove(4, Red)
 
-	assert.Equal(t, "[81,0,0,0,0,0]", myBoard.toState())
+	assert.Equal(t, "[0,0,0,0,1,0,0]", myBoard.toState())
 }

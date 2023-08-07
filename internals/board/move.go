@@ -1,13 +1,10 @@
 package board
 
-func (b *Board) MakeMove(rowNr, chip Chip) {
-	var lineNr int
-
-	for lineNr = 5; lineNr > 0; lineNr-- {
-		if b.Line[lineNr][rowNr] != None {
-			break
-		}
+func (b *Board) MakeMove(lineIdx int, chip Chip) {
+	var rowIdx int
+	for rowIdx = 5; rowIdx > 0 && b.Line[lineIdx][rowIdx] == None; rowIdx-- {
+		continue
 	}
 
-	b.Line[lineNr][rowNr] = chip
+	b.Line[lineIdx][rowIdx] = chip
 }
