@@ -10,7 +10,7 @@ func TestMove(t *testing.T) {
 	myBoard := Init()
 	myBoard.MakeMove(4, Red)
 
-	assert.Equal(t, "[0,0,0,0,1,0,0]", myBoard.toState())
+	assert.Equal(t, "[0,0,0,0,1,0,0]", myBoard.ToState())
 }
 
 func TestTwoMovesInTwoLines(t *testing.T) {
@@ -18,7 +18,7 @@ func TestTwoMovesInTwoLines(t *testing.T) {
 	myBoard.MakeMove(4, Red)
 	myBoard.MakeMove(3, Yellow)
 
-	assert.Equal(t, "[0,0,0,2,1,0,0]", myBoard.toState())
+	assert.Equal(t, "[0,0,0,2,1,0,0]", myBoard.ToState())
 }
 
 func TestTwoMovesInSameLine(t *testing.T) {
@@ -26,7 +26,7 @@ func TestTwoMovesInSameLine(t *testing.T) {
 	myBoard.MakeMove(4, Red)
 	myBoard.MakeMove(4, Yellow)
 
-	assert.Equal(t, "[0,0,0,0,7,0,0]", myBoard.toState())
+	assert.Equal(t, "[0,0,0,0,7,0,0]", myBoard.ToState())
 }
 
 func TestValidMovesOnInitBoard(t *testing.T) {

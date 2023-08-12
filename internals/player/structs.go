@@ -1,6 +1,9 @@
 package player
 
-import "github.com/ewoutquax/connect-4/internals/board"
+import (
+	"github.com/ewoutquax/connect-4/internals/board"
+	"github.com/ewoutquax/connect-4/internals/utils"
+)
 
 type PlayerKind uint8
 
@@ -16,4 +19,7 @@ type Player struct {
 
 	Kind PlayerKind // Human or AI player
 	Chip board.Chip // Color of the chip of this player
+
+	Reader utils.StdinReader
+	Writer utils.StdoutWriter
 }

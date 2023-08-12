@@ -5,7 +5,7 @@ import (
 	"math"
 )
 
-func (b Board) toState() string {
+func (b Board) ToState() string {
 	stateLines := make([]int, 7)
 
 	for idxLine, line := range b.Line {
