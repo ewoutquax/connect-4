@@ -8,7 +8,7 @@ import (
 func New(pk PlayerKind, c board.Chip, readers ...utils.StdinReader) (p Player) {
 	p.Kind = pk
 	p.Chip = c
-	p.BoardStates = make([]board.State, 0, board.MaxBoardLines*board.MaxBoardRows)
+	p.BoardStates = make([]board.State, 0, board.MaxBoardLines*board.MaxBoardRows/2)
 
 	if len(readers) > 0 {
 		p.Reader = readers[0]
