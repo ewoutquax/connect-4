@@ -11,6 +11,7 @@ func (p *Player) PlayRound(b *board.Board) {
 	validMoves := b.ValidMoves()
 	move := p.ChooseMove(validMoves)
 	b.MakeMove(move, p.Chip)
+	p.BoardStates = append(p.BoardStates, b.ToState())
 }
 
 func (p *Player) ChooseMove(allowedMoves []int) int {

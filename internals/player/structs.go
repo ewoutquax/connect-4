@@ -22,4 +22,6 @@ type Player struct {
 
 	Reader utils.StdinReader
 	Writer utils.StdoutWriter
+
+	BoardStates []board.State // List of board-states the player has had this game
 }

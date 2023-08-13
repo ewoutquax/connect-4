@@ -9,7 +9,6 @@ func (b *Board) MakeMove(lineIdx int, chip Chip) {
 	}
 
 	b.Line[lineIdx][rowIdx] = chip
-	b.States = append(b.States, b.ToState())
 }
 
 func (b *Board) ValidMoves() (valid []int) {

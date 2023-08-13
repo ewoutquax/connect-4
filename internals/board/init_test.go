@@ -21,6 +21,4 @@ func TestEmptyBoard(t *testing.T) {
 	for idx := 0; idx < 7; idx++ {
 		assert.Equal(6, len(board.Line[idx]))
 	}
-
-	assert.Equal(0, len(board.States))
 }
