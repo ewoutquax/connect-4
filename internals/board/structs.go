@@ -33,4 +33,5 @@ type State string // A JSON-string representation of the state of the board
 // A yellow chip in the highest column will get the state value: 2 * 3 ^ 5 = 486
 type Board struct {
 	Line   map[int][]Chip // A line is a list of 6 rows, each holding a chip
+	States []State        // List of states the board has had this game
 }

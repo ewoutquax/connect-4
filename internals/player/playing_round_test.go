@@ -30,4 +30,6 @@ func TestPlayRound(t *testing.T) {
 
 	assert := assert.New(t)
 	assert.Equal(board.State("[0,1,0,0,0,0,0]"), myBoard.ToState())
+	assert.Equal(1, len(myBoard.States))
+	assert.Equal(board.State("[0,1,0,0,0,0,0]"), myBoard.States[0])
 }
