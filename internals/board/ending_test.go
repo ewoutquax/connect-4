@@ -13,7 +13,7 @@ func TestIsFullForInitBoard(t *testing.T) {
 }
 
 func TestIsFullForFullBoard(t *testing.T) {
-	fullState := "[243,243,243,243,243,243,243]"
+	fullState := State("[243,243,243,243,243,243,243]")
 	board := FromState(fullState)
 
 	assert.True(t, board.IsFull())

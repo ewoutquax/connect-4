@@ -1,10 +1,11 @@
 package board
 
 func Init() (board Board) {
-	board.Line = make(map[int][]Chip, 7)
+	board.Line = make(map[int][]Chip, MaxBoardLines)
+	board.States = make([]State, 0, MaxBoardLines*MaxBoardRows)
 
-	for idx := 0; idx < 7; idx++ {
-		board.Line[idx] = make([]Chip, 6)
+	for idx := 0; idx < MaxBoardLines; idx++ {
+		board.Line[idx] = make([]Chip, MaxBoardRows)
 	}
 
 	return board

@@ -14,8 +14,8 @@ type StdinReaderMockMessage struct {
 	message string
 }
 
-func (mock StdinReaderMockMessage) StdinReaderExec() string {
-	return mock.message
+func (reader StdinReaderMockMessage) StdinReaderExec() string {
+	return reader.message
 }
 
 func TestCreateHumanPlayer(t *testing.T) {
@@ -39,7 +39,7 @@ func TestCreateHumanPlayerWithMockedStdInReader(t *testing.T) {
 	assert.Equal(t, "player.Player", kind)
 	assert.Equal(t, player.PlayerKindHuman, p.Kind)
 	assert.Equal(t, board.Red, p.Chip)
-	assert.Equal(t, "player_test.StdinReaderMock", reader)
+	assert.Equal(t, "player_test.StdinReaderMockMessage", reader)
 	assert.Equal(t, "mocking succeeded", p.Reader.StdinReaderExec())
 }
 

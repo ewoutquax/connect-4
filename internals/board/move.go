@@ -4,7 +4,7 @@ import "sort"
 
 func (b *Board) MakeMove(lineIdx int, chip Chip) {
 	var rowIdx int
-	for rowIdx = 5; rowIdx > 0 && b.Line[lineIdx][rowIdx-1] == None; rowIdx-- {
+	for rowIdx = MaxBoardRows - 1; rowIdx > 0 && b.Line[lineIdx][rowIdx-1] == None; rowIdx-- {
 		continue
 	}
 
@@ -13,7 +13,7 @@ func (b *Board) MakeMove(lineIdx int, chip Chip) {
 
 func (b *Board) ValidMoves() (valid []int) {
 	for idx, line := range b.Line {
-		if line[5] == None {
+		if line[MaxBoardRows-1] == None {
 			valid = append(valid, idx)
 		}
 	}

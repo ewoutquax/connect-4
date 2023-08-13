@@ -9,7 +9,7 @@ import (
 )
 
 func TestInitBoardToState(t *testing.T) {
-	expectedState := "[0,0,0,0,0,0,0]"
+	expectedState := State("[0,0,0,0,0,0,0]")
 	myBoard := Init()
 
 	assert.Equal(t, expectedState, myBoard.ToState())
