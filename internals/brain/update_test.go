@@ -31,11 +31,13 @@ func TestUpdateFirstWin(t *testing.T) {
 		}
 	brain.Update(1.0, 0.7, 0.85, boardStates)
 
+	resultStates := utils.GetAll()
+
 	assert := assert.New(t)
-	assert.InDelta(1.21494375, resultStates[string(boardStates[0])].Score, 0.01)
-	assert.InDelta(1.252875, resultStates[string(boardStates[1])].Score, 0.001)
-	assert.InDelta(1.2975, resultStates[string(boardStates[2])].Score, 0.0001)
-	assert.Equal(1.35, resultStates[string(boardStates[3])].Score)
+	assert.InDelta(0.71494375, resultStates[string(boardStates[0])].Score, 0.01)
+	assert.InDelta(0.752875, resultStates[string(boardStates[1])].Score, 0.001)
+	assert.InDelta(0.7975, resultStates[string(boardStates[2])].Score, 0.0001)
+	assert.InDelta(0.85, resultStates[string(boardStates[3])].Score, 0.00001)
 }
 
 func TestUpdateFirstLoose(t *testing.T) {
@@ -47,8 +49,10 @@ func TestUpdateFirstLoose(t *testing.T) {
 		}
 	brain.Update(0.0, 0.7, 0.85, boardStates)
 
+	resultStates := utils.GetAll()
+
 	assert := assert.New(t)
-	assert.InDelta(0.747125, resultStates[string(boardStates[0])].Score, 0.001)
-	assert.InDelta(0.7025, resultStates[string(boardStates[1])].Score, 0.0001)
-	assert.Equal(0.65, resultStates[string(boardStates[2])].Score)
+	assert.InDelta(0.247125, resultStates[string(boardStates[0])].Score, 0.001)
+	assert.InDelta(0.2025, resultStates[string(boardStates[1])].Score, 0.0001)
+	assert.InDelta(0.15, resultStates[string(boardStates[2])].Score, 0.00001)
 }

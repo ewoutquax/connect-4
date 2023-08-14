@@ -2,7 +2,7 @@ package player
 
 import (
 	"github.com/ewoutquax/connect-4/internals/board"
-	"github.com/ewoutquax/connect-4/internals/utils"
+	"github.com/ewoutquax/connect-4/utils"
 )
 
 func New(pk PlayerKind, c board.Chip, readers ...utils.StdinReader) (p Player) {

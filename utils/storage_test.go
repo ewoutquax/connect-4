@@ -28,15 +28,19 @@ func TestWriteValue(t *testing.T) {
 	}
 
 	utils.SetState(redisKey, stateScore)
-	result := utils.GetState(redisKey)
+	isFound, result := utils.GetState(redisKey)
 
-	assert.Equal(t, 7, result.Count)
-	assert.Equal(t, 0.85, result.Score)
+	assert := assert.New(t)
+	assert.True(isFound)
+	assert.Equal(7, result.Count)
+	assert.Equal(0.85, result.Score)
 }
 
 func TestReadUnknownValue(t *testing.T) {
-	result := utils.GetState(redisKeyUnknown)
+	isFound, result := utils.GetState(redisKeyUnknown)
 
-	assert.Equal(t, 0, result.Count)
-	assert.Equal(t, 0.5, result.Score)
+	assert := assert.New(t)
+	assert.False(isFound)
+	assert.Equal(1, result.Count)
+	assert.Equal(0.5, result.Score)
 }

@@ -24,8 +24,9 @@ var (
 	once sync.Once
 )
 
-func GetState(state string) (stateScore StateScore) {
+func GetState(state string) (isFound bool, stateScore StateScore) {
 	val, err := rdb().HGet(ctx, RedisHashKey, state).Result()
+	isFound = false
 
 	if err != nil {
 		if err.Error() == "redis: nil" {
@@ -38,6 +39,7 @@ func GetState(state string) (stateScore StateScore) {
 		}
 	} else {
 		json.Unmarshal([]byte(val), &stateScore)
+		isFound = true
 	}
 
 	return
@@ -54,6 +56,24 @@ func SetState(state string, stateScore StateScore) {
 
 func ClearRedis() {
 	rdb().Do(ctx, "FLUSHDB")
+}
+
+func GetAll() map[string]StateScore {
+	val, err := rdb().HGetAll(ctx, RedisHashKey).Result()
+
+	if err != nil {
+		panic(err)
+	}
+
+	var out = make(map[string]StateScore)
+
+	for state, value := range val {
+		stateScore := StateScore{}
+		json.Unmarshal([]byte(value), &stateScore)
+		out[state] = stateScore
+	}
+
+	return out
 }
 
 func rdb() *redis.Client {

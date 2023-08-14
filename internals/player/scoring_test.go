@@ -1,7 +1,6 @@
 package player_test
 
 import (
-	"fmt"
 	"strconv"
 	"testing"
 
@@ -44,11 +43,6 @@ func TestRedWins(t *testing.T) {
 	playerRed.PlayRound(&myBoard)
 	playerYellow.PlayRound(&myBoard)
 	playerRed.PlayRound(&myBoard)
-
-	fmt.Println("states after quick win:", playerRed.BoardStates)
-	fmt.Println("states after quick loose:", playerYellow.BoardStates)
-
-	assert.True(t, false)
 
 	playerRedScore := playerRed.Score()
 	playerYellowScore := playerYellow.Score()

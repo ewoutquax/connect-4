@@ -2,7 +2,7 @@ package player
 
 import (
 	"github.com/ewoutquax/connect-4/internals/board"
-	"github.com/ewoutquax/connect-4/internals/utils"
+	"github.com/ewoutquax/connect-4/utils"
 )
 
 type PlayerKind uint8
