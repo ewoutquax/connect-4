@@ -30,7 +30,7 @@ func GetState(state string) (stateScore StateScore) {
 	if err != nil {
 		if err.Error() == "redis: nil" {
 			stateScore = StateScore{
-				Count: 0,
+				Count: 1,
 				Score: 0.5,
 			}
 		} else {
