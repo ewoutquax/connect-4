@@ -1,4 +1,4 @@
 package game
 
-func Play() {
+func (g *Game) Play() {
 }

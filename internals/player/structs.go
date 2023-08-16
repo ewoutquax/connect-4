@@ -8,8 +8,8 @@ import (
 type PlayerKind uint8
 
 const (
-	PlayerKindHuman PlayerKind = iota + 1
-	PlayerKindAI
+	PlayerKindHuman PlayerKind = iota + 1 // Player is controlled by a human; questions will be answered via a prompt
+	PlayerKindAI                          // Player is controlled by computer; questions will not be prompted, but calculated
 )
 
 type Player struct {

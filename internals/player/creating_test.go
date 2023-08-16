@@ -19,13 +19,16 @@ func (reader StdinReaderMockMessage) StdinReaderExec() string {
 }
 
 func TestCreateHumanPlayer(t *testing.T) {
-	p := player.New(player.PlayerKindHuman, board.Red)
+	p := player.New(
+		player.WithKind(player.PlayerKindHuman),
+		player.WithChip(board.Red),
+	)
 
 	kind := fmt.Sprintf("%s", reflect.TypeOf(p))
 	reader := fmt.Sprintf("%s", reflect.TypeOf(p.Reader))
 
 	assert := assert.New(t)
-	assert.Equal("player.Player", kind)
+	assert.Equal("*player.Player", kind)
 	assert.Equal(player.PlayerKindHuman, p.Kind)
 	assert.Equal(board.Red, p.Chip)
 	assert.Equal(0, len(p.BoardStates))
@@ -34,13 +37,17 @@ func TestCreateHumanPlayer(t *testing.T) {
 }
 
 func TestCreateHumanPlayerWithMockedStdInReader(t *testing.T) {
-	p := player.New(player.PlayerKindHuman, board.Red, StdinReaderMockMessage{message: "mocking succeeded"})
+	p := player.New(
+		player.WithKind(player.PlayerKindHuman),
+		player.WithChip(board.Red),
+		player.WithReader(StdinReaderMockMessage{message: "mocking succeeded"}),
+	)
 
 	kind := fmt.Sprintf("%s", reflect.TypeOf(p))
 	reader := fmt.Sprintf("%s", reflect.TypeOf(p.Reader))
 
 	assert := assert.New(t)
-	assert.Equal("player.Player", kind)
+	assert.Equal("*player.Player", kind)
 	assert.Equal(player.PlayerKindHuman, p.Kind)
 	assert.Equal(board.Red, p.Chip)
 	assert.Equal(0, len(p.BoardStates))
@@ -49,13 +56,16 @@ func TestCreateHumanPlayerWithMockedStdInReader(t *testing.T) {
 }
 
 func TestCreateAIPlayer(t *testing.T) {
-	p := player.New(player.PlayerKindAI, board.Yellow)
+	p := player.New(
+		player.WithKind(player.PlayerKindAI),
+		player.WithChip(board.Yellow),
+	)
 
 	kind := fmt.Sprintf("%s", reflect.TypeOf(p))
 	reader := fmt.Sprintf("%s", reflect.TypeOf(p.Reader))
 
 	assert := assert.New(t)
-	assert.Equal("player.Player", kind)
+	assert.Equal("*player.Player", kind)
 	assert.Equal(player.PlayerKindAI, p.Kind)
 	assert.Equal(board.Yellow, p.Chip)
 	assert.Equal(0, len(p.BoardStates))

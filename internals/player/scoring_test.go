@@ -9,12 +9,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type Moves struct {
+type MockedScoringMoves struct {
 	list []int
 }
 
 type StdinReaderMockScoring struct {
-	moves *Moves
+	moves *MockedScoringMoves
 }
 
 func (m StdinReaderMockScoring) StdinReaderExec() (next string) {
@@ -25,15 +25,23 @@ func (m StdinReaderMockScoring) StdinReaderExec() (next string) {
 }
 
 func TestRedWins(t *testing.T) {
-	moves := Moves{
+	moves := MockedScoringMoves{
 		list: []int{2, 2, 3, 3, 1, 0, 4},
 	}
 	mock := StdinReaderMockScoring{
 		moves: &moves,
 	}
 
-	playerRed := player.New(player.PlayerKindHuman, board.Red, mock)
-	playerYellow := player.New(player.PlayerKindHuman, board.Yellow, mock)
+	playerRed := player.New(
+		player.WithKind(player.PlayerKindHuman),
+		player.WithChip(board.Red),
+		player.WithReader(mock),
+	)
+	playerYellow := player.New(
+		player.WithKind(player.PlayerKindHuman),
+		player.WithChip(board.Yellow),
+		player.WithReader(mock),
+	)
 	myBoard := board.Init()
 
 	playerRed.PlayRound(&myBoard)

@@ -5,22 +5,50 @@ import (
 	"github.com/ewoutquax/connect-4/utils"
 )
 
-func New(pk PlayerKind, c board.Chip, readers ...utils.StdinReader) (p Player) {
-	p.Kind = pk
-	p.Chip = c
-	p.BoardStates = make([]board.State, 0, board.MaxBoardLines*board.MaxBoardRows/2)
+type PlayerOptsFunc func(*Player)
 
-	if len(readers) > 0 {
-		p.Reader = readers[0]
-	} else {
-		if p.Kind == PlayerKindHuman {
-			p.Reader = utils.StdinReaderDefault{}
-		}
+func defaultPlayer() *Player {
+	return &Player{
+		alfa:    0.7,
+		gamma:   0.85,
+		epsilon: 0.95,
 
-		if p.Kind == PlayerKindAI {
+		Kind: PlayerKindHuman,
+		Chip: board.Red,
+
+		Reader: utils.StdinReaderDefault{},
+		Writer: utils.StdoutWriterDefault{},
+
+		BoardStates: make([]board.State, 0, board.MaxBoardLines*board.MaxBoardRows/2),
+	}
+}
+
+func New(optFuncs ...PlayerOptsFunc) *Player {
+	p := defaultPlayer()
+	for _, fn := range optFuncs {
+		fn(p)
+	}
+
+	return p
+}
+
+func WithKind(kind PlayerKind) PlayerOptsFunc {
+	return func(p *Player) {
+		p.Kind = kind
+		if kind == PlayerKindAI {
 			p.Reader = utils.StdinReaderNone{}
 		}
 	}
+}
 
-	return
+func WithChip(chip board.Chip) PlayerOptsFunc {
+	return func(p *Player) {
+		p.Chip = chip
+	}
+}
+
+func WithReader(reader utils.StdinReader) PlayerOptsFunc {
+	return func(p *Player) {
+		p.Reader = reader
+	}
 }

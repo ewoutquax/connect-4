@@ -21,7 +21,10 @@ func (mock StdinReaderMockInput1) StdinReaderExec() string {
 // via stdin (mocked) and then make that moves
 func TestPlayRound(t *testing.T) {
 	myBoard := board.Init()
-	human := player.New(player.PlayerKindHuman, board.Red, StdinReaderMockInput1{move: "1"})
+
+	human := player.New(
+		player.WithReader(StdinReaderMockInput1{move: "1"}),
+	)
 
 	fmt.Println(myBoard)
 	fmt.Println(human)

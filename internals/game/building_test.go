@@ -12,7 +12,11 @@ import (
 )
 
 func TestBuilding(t *testing.T) {
-	game := game.Building(player.PlayerKindHuman, player.PlayerKindAI)
+	game := game.Building(
+		game.WithPlayerRed(player.PlayerKindHuman),
+		game.WithPlayerYellow(player.PlayerKindAI),
+		game.WithTraining,
+	)
 
 	typeGame := fmt.Sprintf("%s", reflect.TypeOf(game))
 	typePlayerRed := fmt.Sprintf("%s", reflect.TypeOf(game.PlayerRed))
@@ -20,9 +24,9 @@ func TestBuilding(t *testing.T) {
 	typeBoard := fmt.Sprintf("%s", reflect.TypeOf(game.Board))
 
 	assert := assert.New(t)
-	assert.Equal("game.Game", typeGame)
-	assert.Equal("player.Player", typePlayerRed)
-	assert.Equal("player.Player", typePlayerYellow)
+	assert.Equal("*game.Game", typeGame)
+	assert.Equal("*player.Player", typePlayerRed)
+	assert.Equal("*player.Player", typePlayerYellow)
 	assert.Equal("board.Board", typeBoard)
 
 	assert.Equal(board.Red, game.PlayerRed.Chip)
@@ -36,5 +40,5 @@ func TestBuilding(t *testing.T) {
 	assert.Equal(board.State("[0,0,0,0,0,0,0]"), game.Board.ToState())
 	assert.False(game.Board.IsFull())
 
-	assert.False(game.Training)
+	assert.True(game.Training)
 }
