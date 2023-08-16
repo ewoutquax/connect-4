@@ -9,8 +9,8 @@ type PlayerOptsFunc func(*Player)
 
 func defaultPlayer() *Player {
 	return &Player{
-		alfa:    0.7,
-		gamma:   0.85,
+		Alfa:    0.7,
+		Gamma:   0.85,
 		epsilon: 0.95,
 
 		Kind: PlayerKindHuman,

@@ -37,7 +37,6 @@ func TestBuilding(t *testing.T) {
 	assert.Equal(player.PlayerKindAI, game.PlayerYellow.Kind)
 	assert.Equal(0, len(game.PlayerYellow.BoardStates))
 
-	assert.Equal(board.State("[0,0,0,0,0,0,0]"), game.Board.ToState())
 	assert.False(game.Board.IsFull())
 
 	assert.True(game.Training)

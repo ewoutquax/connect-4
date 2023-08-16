@@ -54,6 +54,12 @@ func WithStdinReader(reader utils.StdinReader) GameOptsFunc {
 	}
 }
 
+func WithBoard(b board.Board) GameOptsFunc {
+	return func(g *Game) {
+		g.Board = b
+	}
+}
+
 func WithTraining(g *Game) {
 	g.Training = true
 }
