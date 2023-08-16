@@ -17,8 +17,12 @@ const (
 type State string // A JSON-string representation of the state of the board
 
 // Definition of the board:
-// The board has 7 rows, each row is 6 lines high.
-// The state is a 3-digit number system, counting each row from bottom to top, from left to right
+// The board has 7 lines, each line is 6 rows high.
+// The state is a 3-digit number system, counting each line from bottom to top, from left to right
+//
+//	Rows
+//	|
+//	V
 //
 //	5 |
 //	4 |
@@ -27,7 +31,7 @@ type State string // A JSON-string representation of the state of the board
 //	1 |
 //	0 |
 //	  +---------------
-//	    6 5 4 3 2 1 0
+//	    6 5 4 3 2 1 0 <- Lines
 //
 // A red chip in the lowest column will get the state value: 1 * 3 ^ 0 = 1
 // A yellow chip in the highest column will get the state value: 2 * 3 ^ 5 = 486

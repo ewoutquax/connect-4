@@ -3,9 +3,9 @@ package board
 import "sort"
 
 func (b *Board) MakeMove(lineIdx int, chip Chip) {
-	var rowIdx int
-	for rowIdx = MaxBoardRows - 1; rowIdx > 0 && b.Line[lineIdx][rowIdx-1] == None; rowIdx-- {
-		continue
+	var rowIdx int = MaxBoardRows - 1
+	for rowIdx > 0 && b.Line[lineIdx][rowIdx-1] == None {
+		rowIdx--
 	}
 
 	b.Line[lineIdx][rowIdx] = chip
