@@ -11,7 +11,7 @@ func defaultPlayer() *Player {
 	return &Player{
 		Alfa:    0.7,
 		Gamma:   0.85,
-		epsilon: 0.95,
+		Epsilon: 0.95,
 
 		Kind: PlayerKindHuman,
 		Chip: board.Red,

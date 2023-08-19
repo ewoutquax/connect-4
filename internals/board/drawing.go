@@ -17,8 +17,8 @@ func (b *Board) Draw() {
 	for idxRow := MaxBoardRows - 1; idxRow >= 0; idxRow-- {
 		outputCells = make([]string, 1, 8)
 		outputCells[0] = fmt.Sprintf("%d: ", MaxBoardRows-idxRow)
-		for _, line := range b.Line {
-			switch line[idxRow] {
+		for idxLine := 0; idxLine < MaxBoardLines; idxLine++ {
+			switch b.Line[idxLine][idxRow] {
 			case Red:
 				outputCells = append(outputCells, ColorRed+"X")
 			case Yellow:

@@ -1,7 +1,8 @@
 package utils
 
 import (
-	"io"
+	"bufio"
+	"log"
 	"os"
 	"strings"
 )
@@ -14,9 +15,12 @@ type StdinReaderDefault struct{}
 type StdinReaderNone struct{}
 
 func (r StdinReaderDefault) StdinReaderExec() string {
-	rawData, _ := io.ReadAll(os.Stdin)
-	msg := strings.Trim(string(rawData), "\n")
-	return string(msg)
+	reader := bufio.NewReader(os.Stdin)
+	msg, err := reader.ReadString('\n')
+	if err != nil {
+		log.Fatal(err)
+	}
+	return strings.Trim(msg, "\n")
 }
 
 func (r StdinReaderNone) StdinReaderExec() string {

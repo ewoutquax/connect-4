@@ -15,7 +15,7 @@ const (
 type Player struct {
 	Alfa    float64 // How solid is each step made. Normal: 0.7, but can be lower when epsilon is lower
 	Gamma   float64 // How solid is this move compared to the list of move. Normal: 0.85
-	epsilon float64 // How often should we just do a blind guess between the valid move; normal: 0.95
+	Epsilon float64 // How often should we just do a blind guess between the valid move; normal: 0.95
 
 	Kind PlayerKind // Human or AI player
 	Chip board.Chip // Color of the chip of this player
