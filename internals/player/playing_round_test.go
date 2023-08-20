@@ -22,7 +22,7 @@ func (mock StdinReaderMockInput1) StdinReaderExec() string {
 func TestPlayRound(t *testing.T) {
 	myBoard := board.Init()
 
-	human := player.New(
+	human := player.Building(
 		player.WithReader(StdinReaderMockInput1{move: "1"}),
 	)
 

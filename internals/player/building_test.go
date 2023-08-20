@@ -19,7 +19,7 @@ func (reader StdinReaderMockMessage) StdinReaderExec() string {
 }
 
 func TestCreateHumanPlayer(t *testing.T) {
-	p := player.New(
+	p := player.Building(
 		player.WithKind(player.PlayerKindHuman),
 		player.WithChip(board.Red),
 	)
@@ -37,7 +37,7 @@ func TestCreateHumanPlayer(t *testing.T) {
 }
 
 func TestCreateHumanPlayerWithMockedStdInReader(t *testing.T) {
-	p := player.New(
+	p := player.Building(
 		player.WithKind(player.PlayerKindHuman),
 		player.WithChip(board.Red),
 		player.WithReader(StdinReaderMockMessage{message: "mocking succeeded"}),
@@ -56,7 +56,7 @@ func TestCreateHumanPlayerWithMockedStdInReader(t *testing.T) {
 }
 
 func TestCreateAIPlayer(t *testing.T) {
-	p := player.New(
+	p := player.Building(
 		player.WithKind(player.PlayerKindAI),
 		player.WithChip(board.Yellow),
 	)

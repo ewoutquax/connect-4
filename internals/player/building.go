@@ -32,7 +32,7 @@ func defaultPlayer() *Player {
 	}
 }
 
-func New(optFuncs ...PlayerOptsFunc) *Player {
+func Building(optFuncs ...PlayerOptsFunc) *Player {
 	p := defaultPlayer()
 	for _, fn := range optFuncs {
 		fn(p)

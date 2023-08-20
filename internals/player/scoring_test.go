@@ -32,12 +32,12 @@ func TestRedWins(t *testing.T) {
 		moves: &moves,
 	}
 
-	playerRed := player.New(
+	playerRed := player.Building(
 		player.WithKind(player.PlayerKindHuman),
 		player.WithChip(board.Red),
 		player.WithReader(mock),
 	)
-	playerYellow := player.New(
+	playerYellow := player.Building(
 		player.WithKind(player.PlayerKindHuman),
 		player.WithChip(board.Yellow),
 		player.WithReader(mock),

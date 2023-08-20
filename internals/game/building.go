@@ -32,11 +32,11 @@ func BuildingTraining(opts ...GameOptsFunc) *Game {
 }
 
 func defaultGame() *Game {
-	red := player.New(
+	red := player.Building(
 		player.WithKind(player.PlayerKindHuman),
 		player.WithChip(board.Red),
 	)
-	yellow := player.New(
+	yellow := player.Building(
 		player.WithKind(player.PlayerKindHuman),
 		player.WithChip(board.Yellow),
 	)
