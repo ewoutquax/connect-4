@@ -14,7 +14,7 @@ func TestMain(m *testing.M) {
 	os.Setenv("GOENV", "TEST")
 	utils.ClearRedis()
 	exitCode := m.Run()
-	// utils.ClearRedis()
+	utils.ClearRedis()
 	os.Exit(exitCode)
 }
 
