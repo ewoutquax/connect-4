@@ -1,7 +1,7 @@
 package game
 
 import (
-	"github.com/ewoutquax/connect-4/internals/brain"
+	"github.com/ewoutquax/connect-4/internals/ai"
 	"github.com/ewoutquax/connect-4/internals/player"
 )
 
@@ -24,6 +24,6 @@ func (g *Game) Play() {
 		}
 	}
 
-	brain.Update(g.CurrentPlayer.Score(), g.CurrentPlayer.Alfa, g.CurrentPlayer.Gamma, g.CurrentPlayer.BoardStates)
-	brain.Update(otherPlayer.Score(), otherPlayer.Alfa, otherPlayer.Gamma, otherPlayer.BoardStates)
+	ai.Update(g.CurrentPlayer.Score(), g.CurrentPlayer.Alfa, g.CurrentPlayer.Gamma, g.CurrentPlayer.BoardStates)
+	ai.Update(otherPlayer.Score(), otherPlayer.Alfa, otherPlayer.Gamma, otherPlayer.BoardStates)
 }

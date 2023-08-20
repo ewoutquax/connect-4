@@ -1,11 +1,11 @@
-package brain_test
+package ai_test
 
 import (
 	"os"
 	"testing"
 
+	"github.com/ewoutquax/connect-4/internals/ai"
 	"github.com/ewoutquax/connect-4/internals/board"
-	"github.com/ewoutquax/connect-4/internals/brain"
 	"github.com/ewoutquax/connect-4/utils"
 	"github.com/stretchr/testify/assert"
 )
@@ -26,7 +26,7 @@ func TestUpdateFirstWin(t *testing.T) {
 			"[0,1,7,7,0,0,0]",
 			"[2,1,7,7,1,0,0]",
 		}
-	brain.Update(1.0, 0.7, 0.85, boardStates)
+	ai.Update(1.0, 0.7, 0.85, boardStates)
 
 	resultStates := utils.GetAll()
 
@@ -44,7 +44,7 @@ func TestUpdateFirstLoose(t *testing.T) {
 			"[0,0,7,7,0,0,0]",
 			"[2,1,7,7,0,0,0]",
 		}
-	brain.Update(0.0, 0.7, 0.85, boardStates)
+	ai.Update(0.0, 0.7, 0.85, boardStates)
 
 	resultStates := utils.GetAll()
 

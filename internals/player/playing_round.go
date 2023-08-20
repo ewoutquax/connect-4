@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	utils "github.com/ewoutquax/aoc-go-utils"
+	"github.com/ewoutquax/connect-4/internals/ai"
 	"github.com/ewoutquax/connect-4/internals/board"
-	"github.com/ewoutquax/connect-4/internals/brain"
 )
 
 func (p *Player) PlayRound(b *board.Board) {
@@ -31,12 +31,12 @@ func (p *Player) chooseMoveHuman(allowedMoves []int, b *board.Board) int {
 }
 
 func (p *Player) chooseMoveAI(allowedMoves []int, b *board.Board) (move int) {
-	move = brain.BestMoveForBoard(
-		brain.BuildBestMoveOptions(
-			brain.WithMoves(allowedMoves),
-			brain.WithBoard(b),
-			brain.WithChip(p.Chip),
-			brain.WithEpsilon(p.Epsilon),
+	move = ai.BestMoveForBoard(
+		ai.BuildBestMoveOptions(
+			ai.WithMoves(allowedMoves),
+			ai.WithBoard(b),
+			ai.WithChip(p.Chip),
+			ai.WithEpsilon(p.Epsilon),
 		),
 	)
 
