@@ -36,7 +36,7 @@ func TestMain(m *testing.M) {
 
 func TestPlayWithTwoHumanPlayers(t *testing.T) {
 	moves := MockedPlayingMoves{
-		list: []int{2, 2, 3, 3, 1, 0, 4},
+		list: []int{3, 3, 4, 4, 2, 1, 5},
 	}
 	mock := StdinReaderMockPlaying{
 		moves: &moves,

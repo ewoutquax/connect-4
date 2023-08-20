@@ -26,7 +26,7 @@ func (m StdinReaderMockScoring) StdinReaderExec() (next string) {
 
 func TestRedWins(t *testing.T) {
 	moves := MockedScoringMoves{
-		list: []int{2, 2, 3, 3, 1, 0, 4},
+		list: []int{3, 3, 4, 4, 2, 1, 5},
 	}
 	mock := StdinReaderMockScoring{
 		moves: &moves,

@@ -22,8 +22,8 @@ func main() {
 			)
 		} else {
 			myGame = game.Building(
-				game.WithPlayerRed(player.PlayerKindHuman),
-				game.WithPlayerYellow(player.PlayerKindAI),
+				game.WithPlayerRed(player.PlayerKindAI),
+				game.WithPlayerYellow(player.PlayerKindHuman),
 			)
 		}
 

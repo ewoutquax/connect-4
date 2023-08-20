@@ -23,7 +23,7 @@ func TestPlayRound(t *testing.T) {
 	myBoard := board.Init()
 
 	human := player.Building(
-		player.WithReader(StdinReaderMockInput1{move: "1"}),
+		player.WithReader(StdinReaderMockInput1{move: "2"}),
 	)
 
 	fmt.Println(myBoard)
