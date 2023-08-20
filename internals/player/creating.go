@@ -7,11 +7,20 @@ import (
 
 type PlayerOptsFunc func(*Player)
 
+const MetaHumanAlfa float64 = 0.9
+const MetaHumanGamma float64 = 0.85
+const MetaAIAlfa float64 = 0.7
+const MetaAIGamma float64 = 0.85
+const MetaAIEpsilon float64 = 0.95
+const MetaTrainingAIAlfa float64 = 0.5
+const MetaTrainingAIGamma float64 = 0.85
+const MetaTrainingAIEpsilon float64 = 0.85
+
 func defaultPlayer() *Player {
 	return &Player{
-		Alfa:    0.7,
-		Gamma:   0.85,
-		Epsilon: 0.95,
+		Alfa:    MetaAIAlfa,
+		Gamma:   MetaAIGamma,
+		Epsilon: MetaAIEpsilon,
 
 		Kind: PlayerKindHuman,
 		Chip: board.Red,

@@ -20,8 +20,8 @@ type Player struct {
 	Kind PlayerKind // Human or AI player
 	Chip board.Chip // Color of the chip of this player
 
-	Reader utils.StdinReader
-	Writer utils.StdoutWriter
+	Reader utils.StdinReader  // package to read the Stdin for user-input, needed for mocking
+	Writer utils.StdoutWriter // package to read the Stdin for user-input, needed for mocking
 
 	BoardStates []board.State // List of board-states the player has had this game
 }

@@ -16,6 +16,21 @@ func Building(optFuncs ...GameOptsFunc) *Game {
 	return g
 }
 
+func BuildingTraining(opts ...GameOptsFunc) *Game {
+	game := defaultGame()
+
+	game.PlayerRed.Kind = player.PlayerKindAI
+	game.PlayerYellow.Kind = player.PlayerKindAI
+
+	for _, fn := range opts {
+		fn(game)
+	}
+
+	WithTraining(game)
+
+	return game
+}
+
 func defaultGame() *Game {
 	red := player.New(
 		player.WithKind(player.PlayerKindHuman),
@@ -62,4 +77,39 @@ func WithBoard(b board.Board) GameOptsFunc {
 
 func WithTraining(g *Game) {
 	g.Training = true
+
+	if g.PlayerRed.Kind == player.PlayerKindAI {
+		g.PlayerRed.Alfa = player.MetaTrainingAIAlfa
+		g.PlayerRed.Gamma = player.MetaTrainingAIGamma
+		g.PlayerRed.Epsilon = player.MetaTrainingAIEpsilon
+	}
+	if g.PlayerYellow.Kind == player.PlayerKindAI {
+		g.PlayerYellow.Alfa = player.MetaTrainingAIAlfa
+		g.PlayerYellow.Gamma = player.MetaTrainingAIGamma
+		g.PlayerYellow.Epsilon = player.MetaTrainingAIEpsilon
+	}
+}
+
+func WithCurrentPlayer(chip board.Chip) GameOptsFunc {
+	return func(g *Game) {
+		switch chip {
+		case board.Red:
+			g.CurrentPlayer = g.PlayerRed
+		case board.Yellow:
+			g.CurrentPlayer = g.PlayerYellow
+		}
+	}
+}
+
+func WithNextMove(move int) GameOptsFunc {
+	return func(g *Game) {
+		g.Board.MakeMove(move, g.CurrentPlayer.Chip)
+		g.CurrentPlayer.BoardStates = append(g.CurrentPlayer.BoardStates, g.Board.ToState())
+
+		if g.CurrentPlayer == g.PlayerRed {
+			g.CurrentPlayer = g.PlayerYellow
+		} else {
+			g.CurrentPlayer = g.PlayerRed
+		}
+	}
 }
