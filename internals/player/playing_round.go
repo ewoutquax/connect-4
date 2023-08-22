@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	utils "github.com/ewoutquax/aoc-go-utils"
-	"github.com/ewoutquax/connect-4/internals/ai"
 	"github.com/ewoutquax/connect-4/internals/board"
 )
 
@@ -30,15 +29,13 @@ func (p *Player) chooseMoveHuman(allowedMoves []int, b *board.Board) int {
 	return utils.ConvStrToI(choice) - 1
 }
 
-func (p *Player) chooseMoveAI(allowedMoves []int, b *board.Board) (move int) {
-	move = ai.BestMoveForBoard(
-		ai.BuildBestMoveOptions(
-			ai.WithMoves(allowedMoves),
-			ai.WithBoard(b),
-			ai.WithChip(p.Chip),
-			ai.WithEpsilon(p.Epsilon),
+func (p *Player) chooseMoveAI(allowedMoves []int, b *board.Board) int {
+	return BestMoveForBoard(
+		BuildBestMoveOptions(
+			WithMoves(allowedMoves),
+			WithBoard(b),
+			WithChipForMove(p.Chip),
+			WithEpsilon(p.Epsilon),
 		),
 	)
-
-	return
 }

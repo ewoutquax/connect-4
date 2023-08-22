@@ -1,12 +1,12 @@
-package ai_test
+package player_test
 
 import (
 	"fmt"
 	"reflect"
 	"testing"
 
-	"github.com/ewoutquax/connect-4/internals/ai"
 	"github.com/ewoutquax/connect-4/internals/board"
+	. "github.com/ewoutquax/connect-4/internals/player"
 	"github.com/ewoutquax/connect-4/utils"
 	"github.com/stretchr/testify/assert"
 )
@@ -18,12 +18,12 @@ func TestBestMoveForBoard(t *testing.T) {
 	myBoard := board.Init()
 	moves := []int{0, 1, 2, 3, 4, 5, 6}
 
-	move := ai.BestMoveForBoard(
-		ai.BuildBestMoveOptions(
-			ai.WithMoves(moves),
-			ai.WithBoard(&myBoard),
-			ai.WithChip(board.Red),
-			ai.WithEpsilon(1.0),
+	move := BestMoveForBoard(
+		BuildBestMoveOptions(
+			WithMoves(moves),
+			WithBoard(&myBoard),
+			WithChipForMove(board.Red),
+			WithEpsilon(1.0),
 		),
 	)
 

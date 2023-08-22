@@ -16,10 +16,14 @@ func TestInitBoardToState(t *testing.T) {
 }
 
 func TestInitBoardFromState(t *testing.T) {
-	myBoard := FromState("[486,0,0,0,1,0]")
+	myBoard := FromState("[486,0,0,0,1,0,0]")
 	kind := fmt.Sprintf("%s", reflect.TypeOf(myBoard))
 
 	assert.Equal(t, "board.Board", kind)
 	assert.Equal(t, Yellow, myBoard.Line[0][5])
 	assert.Equal(t, Red, myBoard.Line[4][0])
+
+	for _, line := range myBoard.Line {
+		assert.Equal(t, 6, len(line))
+	}
 }

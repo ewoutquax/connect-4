@@ -1,4 +1,4 @@
-package ai
+package player
 
 import (
 	"math/rand"
@@ -34,17 +34,18 @@ func BestMoveForBoard(options *BestMoveOptions) int {
 
 			_, stateScore = utils.GetState(string(tempBoard.ToState()))
 
-			if highScore < stateScore.Score {
-				highScore = stateScore.Score
+			if highScore < stateScore.AverageScore {
+				highScore = stateScore.AverageScore
 				bestMoves = []int{move}
-			} else if highScore == stateScore.Score {
+			} else if highScore == stateScore.AverageScore {
 				bestMoves = append(bestMoves, move)
 			}
 		}
 	}
 
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	return r.Intn(len(bestMoves)) + 1
+	idxChoice := r.Intn(len(bestMoves))
+	return bestMoves[idxChoice]
 }
 
 func BuildBestMoveOptions(optFuncs ...BestMoveOptionsFunc) *BestMoveOptions {
@@ -64,7 +65,7 @@ func WithBoard(b *board.Board) BestMoveOptionsFunc {
 	return func(bmo *BestMoveOptions) { bmo.Board = b }
 }
 
-func WithChip(c board.Chip) BestMoveOptionsFunc {
+func WithChipForMove(c board.Chip) BestMoveOptionsFunc {
 	return func(bmo *BestMoveOptions) { bmo.Chip = c }
 }
 
