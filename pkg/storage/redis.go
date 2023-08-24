@@ -9,9 +9,8 @@ import (
 )
 
 type StateScore struct {
-	Count        int     `json:"count"` // Number of times this state has been given a score. Needed to calculate the average score
-	Score        float64 `json:"score"` // Total score by a state
-	AverageScore float64
+	Count int     `json:"count"` // Number of times this state has been given a score. Needed to calculate the average score
+	Score float64 `json:"score"` // Total score by a state
 }
 
 const EnvVarRedisConn string = "REDIS_CONN"
@@ -29,16 +28,14 @@ func GetState(state string) (isFound bool, stateScore StateScore) {
 	if err != nil {
 		if err.Error() == "redis: nil" {
 			stateScore = StateScore{
-				Count:        1,
-				Score:        0.5,
-				AverageScore: 0.5,
+				Count: 1,
+				Score: 0.5,
 			}
 		} else {
 			panic(err)
 		}
 	} else {
 		json.Unmarshal([]byte(val), &stateScore)
-		stateScore.AverageScore = stateScore.Score / float64(stateScore.Count)
 		isFound = true
 	}
 

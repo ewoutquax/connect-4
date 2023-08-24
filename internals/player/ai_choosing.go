@@ -23,7 +23,7 @@ type BestMoveOptions struct {
 func BestMoveForBoard(options *BestMoveOptions) int {
 	var tempBoard board.Board
 	var stateScore storage.StateScore
-	var highScore float64
+	var highScore float64 = -1.0
 	var bestMoves []int
 
 	if rand.Float64() > options.Epsilon {
@@ -43,10 +43,11 @@ func BestMoveForBoard(options *BestMoveOptions) int {
 				_, stateScore = storage.GetState(string(tempBoard.ToState()))
 			}
 
-			if highScore < stateScore.AverageScore {
-				highScore = stateScore.AverageScore
+			averageScore := stateScore.Score / float64(stateScore.Count)
+			if highScore < averageScore {
+				highScore = averageScore
 				bestMoves = []int{move}
-			} else if highScore == stateScore.AverageScore {
+			} else if highScore == averageScore {
 				bestMoves = append(bestMoves, move)
 			}
 		}
