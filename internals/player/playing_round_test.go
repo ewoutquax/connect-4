@@ -17,6 +17,11 @@ func (mock StdinReaderMockInput1) StdinReaderExec() string {
 	return mock.move
 }
 
+func mockTrainingGame(_ int) {
+	fmt.Println("internals/player/playing_round_test.go: mockTrainingGame: do nothing")
+	return
+}
+
 // A human player will get the valid moves, make a choice
 // via stdin (mocked) and then make that moves
 func TestPlayRound(t *testing.T) {
@@ -29,7 +34,7 @@ func TestPlayRound(t *testing.T) {
 	fmt.Println(myBoard)
 	fmt.Println(human)
 
-	human.PlayRound(&myBoard)
+	human.PlayRound(&myBoard, mockTrainingGame)
 
 	assert := assert.New(t)
 	assert.Equal(board.State("[0,1,0,0,0,0,0]"), myBoard.ToState())

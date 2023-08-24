@@ -23,6 +23,7 @@ func TestBestMoveForBoard(t *testing.T) {
 			WithBoard(&myBoard),
 			WithChipForMove(board.Red),
 			WithEpsilon(1.0),
+			WithHookTrainingGame(mockTrainingGame),
 		),
 	)
 

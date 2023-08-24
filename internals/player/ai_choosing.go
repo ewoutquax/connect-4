@@ -8,13 +8,16 @@ import (
 	"github.com/ewoutquax/connect-4/pkg/storage"
 )
 
+const thresholdTrainingStateCount int = 10
+
 type BestMoveOptionsFunc func(*BestMoveOptions)
 
 type BestMoveOptions struct {
-	Moves   []int
-	Board   *board.Board
-	Chip    board.Chip
-	Epsilon float64
+	Moves            []int
+	Board            *board.Board
+	Chip             board.Chip
+	Epsilon          float64
+	HookTrainingGame func(nextMove int)
 }
 
 func BestMoveForBoard(options *BestMoveOptions) int {
@@ -33,6 +36,12 @@ func BestMoveForBoard(options *BestMoveOptions) int {
 			tempBoard.MakeMove(move, options.Chip)
 
 			_, stateScore = storage.GetState(string(tempBoard.ToState()))
+
+			if stateScore.Count < thresholdTrainingStateCount {
+				options.HookTrainingGame(move)
+				// And refetch the now updated score for the new state
+				_, stateScore = storage.GetState(string(tempBoard.ToState()))
+			}
 
 			if highScore < stateScore.AverageScore {
 				highScore = stateScore.AverageScore
@@ -71,4 +80,8 @@ func WithChipForMove(c board.Chip) BestMoveOptionsFunc {
 
 func WithEpsilon(e float64) BestMoveOptionsFunc {
 	return func(bmo *BestMoveOptions) { bmo.Epsilon = e }
+}
+
+func WithHookTrainingGame(htg func(int)) BestMoveOptionsFunc {
+	return func(bmo *BestMoveOptions) { bmo.HookTrainingGame = htg }
 }
