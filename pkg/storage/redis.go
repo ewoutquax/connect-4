@@ -4,9 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"os"
-	"sync"
 
-	"github.com/ewoutquax/connect-4/pkg/envvars"
 	redis "github.com/redis/go-redis/v9"
 )
 
@@ -20,13 +18,12 @@ const EnvVarRedisConn string = "REDIS_CONN"
 const RedisHashKey string = "connect-4"
 
 var (
-	ctx  = context.Background()
-	conn *redis.Client
-	once sync.Once
+	ctx = context.Background()
+	rdb *redis.Client
 )
 
 func GetState(state string) (isFound bool, stateScore StateScore) {
-	val, err := rdb().HGet(ctx, RedisHashKey, state).Result()
+	val, err := rdb.HGet(ctx, RedisHashKey, state).Result()
 	isFound = false
 
 	if err != nil {
@@ -54,15 +51,15 @@ func SetState(state string, stateScore StateScore) {
 		panic(err)
 	}
 
-	rdb().HSet(ctx, RedisHashKey, state, writeable)
+	rdb.HSet(ctx, RedisHashKey, state, writeable)
 }
 
 func ClearRedis() {
-	rdb().Do(ctx, "FLUSHDB")
+	rdb.Do(ctx, "FLUSHDB")
 }
 
 func GetAll() map[string]StateScore {
-	val, err := rdb().HGetAll(ctx, RedisHashKey).Result()
+	val, err := rdb.HGetAll(ctx, RedisHashKey).Result()
 
 	if err != nil {
 		panic(err)
@@ -79,21 +76,11 @@ func GetAll() map[string]StateScore {
 	return out
 }
 
-func rdb() *redis.Client {
-	once.Do(func() {
-		buildRedisConnection()
-	})
-
-	return conn
-}
-
-func buildRedisConnection() {
-	envvars.LoadEnvVars()
-
+func BuildRedisConnection() {
 	opt, err := redis.ParseURL(os.Getenv(EnvVarRedisConn))
 	if err != nil {
 		panic(err)
 	}
 
-	conn = redis.NewClient(opt)
+	rdb = redis.NewClient(opt)
 }

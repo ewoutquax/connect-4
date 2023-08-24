@@ -2,14 +2,23 @@ package player_test
 
 import (
 	"fmt"
+	"os"
 	"reflect"
 	"testing"
 
 	"github.com/ewoutquax/connect-4/internals/board"
+	"github.com/ewoutquax/connect-4/internals/config"
 	. "github.com/ewoutquax/connect-4/internals/player"
 	"github.com/ewoutquax/connect-4/pkg/storage"
 	"github.com/stretchr/testify/assert"
 )
+
+func TestMain(m *testing.M) {
+	os.Setenv("GOENV", "TEST")
+	config.ConnectToRedis()
+	exitCode := m.Run()
+	os.Exit(exitCode)
+}
 
 func TestBestMoveForBoard(t *testing.T) {
 	storage.SetState("[0,0,0,0,0,1,0]", storage.StateScore{Count: 1, Score: 1.0})

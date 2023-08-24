@@ -6,12 +6,14 @@ import (
 
 	"github.com/ewoutquax/connect-4/internals/ai"
 	"github.com/ewoutquax/connect-4/internals/board"
+	"github.com/ewoutquax/connect-4/internals/config"
 	"github.com/ewoutquax/connect-4/pkg/storage"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestMain(m *testing.M) {
 	os.Setenv("GOENV", "TEST")
+	config.ConnectToRedis()
 	storage.ClearRedis()
 	exitCode := m.Run()
 	storage.ClearRedis()

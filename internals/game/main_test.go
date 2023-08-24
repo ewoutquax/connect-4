@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/ewoutquax/connect-4/internals/board"
+	"github.com/ewoutquax/connect-4/internals/config"
 	"github.com/ewoutquax/connect-4/internals/player"
 	"github.com/ewoutquax/connect-4/pkg/storage"
 	"github.com/stretchr/testify/assert"
@@ -28,6 +29,7 @@ func (m StdinReaderMockPlaying) StdinReaderExec() (move string) {
 
 func TestMain(m *testing.M) {
 	os.Setenv("GOENV", "TEST")
+	config.ConnectToRedis()
 	storage.ClearRedis()
 	exitCode := m.Run()
 	storage.ClearRedis()

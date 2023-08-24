@@ -4,6 +4,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/ewoutquax/connect-4/internals/config"
 	"github.com/ewoutquax/connect-4/pkg/storage"
 	"github.com/stretchr/testify/assert"
 )
@@ -15,6 +16,7 @@ const redisKeyUnknown string = "unknown-state"
 
 func TestMain(m *testing.M) {
 	os.Setenv("GOENV", "TEST")
+	config.ConnectToRedis()
 	storage.ClearRedis()
 	exitCode := m.Run()
 	storage.ClearRedis()

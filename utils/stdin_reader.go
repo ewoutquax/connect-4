@@ -2,7 +2,6 @@ package utils
 
 import (
 	"bufio"
-	"log"
 	"os"
 	"strings"
 )
@@ -18,7 +17,7 @@ func (r StdinReaderDefault) StdinReaderExec() string {
 	reader := bufio.NewReader(os.Stdin)
 	msg, err := reader.ReadString('\n')
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	return strings.Trim(msg, "\n")
 }
