@@ -1,10 +1,10 @@
-package utils_test
+package storage_test
 
 import (
 	"os"
 	"testing"
 
-	"github.com/ewoutquax/connect-4/utils"
+	"github.com/ewoutquax/connect-4/pkg/storage"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,20 +15,20 @@ const redisKeyUnknown string = "unknown-state"
 
 func TestMain(m *testing.M) {
 	os.Setenv("GOENV", "TEST")
-	utils.ClearRedis()
+	storage.ClearRedis()
 	exitCode := m.Run()
-	utils.ClearRedis()
+	storage.ClearRedis()
 	os.Exit(exitCode)
 }
 
 func TestWriteValue(t *testing.T) {
-	stateScore := utils.StateScore{
+	stateScore := storage.StateScore{
 		Count: 7,
 		Score: 0.85,
 	}
 
-	utils.SetState(redisKey, stateScore)
-	isFound, result := utils.GetState(redisKey)
+	storage.SetState(redisKey, stateScore)
+	isFound, result := storage.GetState(redisKey)
 
 	assert := assert.New(t)
 	assert.True(isFound)
@@ -37,7 +37,7 @@ func TestWriteValue(t *testing.T) {
 }
 
 func TestReadUnknownValue(t *testing.T) {
-	isFound, result := utils.GetState(redisKeyUnknown)
+	isFound, result := storage.GetState(redisKeyUnknown)
 
 	assert := assert.New(t)
 	assert.False(isFound)

@@ -6,7 +6,7 @@ import (
 	"github.com/ewoutquax/connect-4/internals/ai"
 	"github.com/ewoutquax/connect-4/internals/board"
 	"github.com/ewoutquax/connect-4/internals/player"
-	"github.com/ewoutquax/connect-4/utils"
+	"github.com/ewoutquax/connect-4/pkg/storage"
 )
 
 func (g *Game) Play() {
@@ -25,7 +25,7 @@ func (g *Game) Play() {
 			for _, move := range g.Board.ValidMoves() {
 				tempBoard := board.FromState(g.Board.ToState())
 				tempBoard.MakeMove(move, g.CurrentPlayer.Chip)
-				_, stateScore := utils.GetState(string(tempBoard.ToState()))
+				_, stateScore := storage.GetState(string(tempBoard.ToState()))
 				if stateScore.Count < 10 {
 					fmt.Printf("Gonna train move '%d'\n", move)
 

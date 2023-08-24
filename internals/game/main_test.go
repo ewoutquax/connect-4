@@ -7,7 +7,7 @@ import (
 
 	"github.com/ewoutquax/connect-4/internals/board"
 	"github.com/ewoutquax/connect-4/internals/player"
-	"github.com/ewoutquax/connect-4/utils"
+	"github.com/ewoutquax/connect-4/pkg/storage"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -28,9 +28,9 @@ func (m StdinReaderMockPlaying) StdinReaderExec() (move string) {
 
 func TestMain(m *testing.M) {
 	os.Setenv("GOENV", "TEST")
-	utils.ClearRedis()
+	storage.ClearRedis()
 	exitCode := m.Run()
-	utils.ClearRedis()
+	storage.ClearRedis()
 	os.Exit(exitCode)
 }
 
@@ -64,7 +64,7 @@ func TestPlayWithTwoHumanPlayers(t *testing.T) {
 			"[0,0,7,7,0,0,0]",
 			"[2,1,7,7,0,0,0]",
 		}
-	resultStates := utils.GetAll()
+	resultStates := storage.GetAll()
 
 	assert := assert.New(t)
 	assert.InDelta(0.71494375, resultStates[string(boardStatesWin[0])].Score, 0.01)

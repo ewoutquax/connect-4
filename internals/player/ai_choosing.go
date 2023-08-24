@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/ewoutquax/connect-4/internals/board"
-	"github.com/ewoutquax/connect-4/utils"
+	"github.com/ewoutquax/connect-4/pkg/storage"
 )
 
 type BestMoveOptionsFunc func(*BestMoveOptions)
@@ -19,7 +19,7 @@ type BestMoveOptions struct {
 
 func BestMoveForBoard(options *BestMoveOptions) int {
 	var tempBoard board.Board
-	var stateScore utils.StateScore
+	var stateScore storage.StateScore
 	var highScore float64
 	var bestMoves []int
 
@@ -32,7 +32,7 @@ func BestMoveForBoard(options *BestMoveOptions) int {
 			tempBoard = board.FromState(origBoardState)
 			tempBoard.MakeMove(move, options.Chip)
 
-			_, stateScore = utils.GetState(string(tempBoard.ToState()))
+			_, stateScore = storage.GetState(string(tempBoard.ToState()))
 
 			if highScore < stateScore.AverageScore {
 				highScore = stateScore.AverageScore

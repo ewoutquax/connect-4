@@ -6,15 +6,15 @@ import (
 
 	"github.com/ewoutquax/connect-4/internals/ai"
 	"github.com/ewoutquax/connect-4/internals/board"
-	"github.com/ewoutquax/connect-4/utils"
+	"github.com/ewoutquax/connect-4/pkg/storage"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestMain(m *testing.M) {
 	os.Setenv("GOENV", "TEST")
-	utils.ClearRedis()
+	storage.ClearRedis()
 	exitCode := m.Run()
-	utils.ClearRedis()
+	storage.ClearRedis()
 	os.Exit(exitCode)
 }
 
@@ -28,7 +28,7 @@ func TestUpdateFirstWin(t *testing.T) {
 		}
 	ai.Update(1.0, 0.7, 0.85, boardStates)
 
-	resultStates := utils.GetAll()
+	resultStates := storage.GetAll()
 
 	assert := assert.New(t)
 	assert.InDelta(0.71494375, resultStates[string(boardStates[0])].Score, 0.01)
@@ -46,7 +46,7 @@ func TestUpdateFirstLoose(t *testing.T) {
 		}
 	ai.Update(0.0, 0.7, 0.85, boardStates)
 
-	resultStates := utils.GetAll()
+	resultStates := storage.GetAll()
 
 	assert := assert.New(t)
 	assert.InDelta(0.247125, resultStates[string(boardStates[0])].Score, 0.001)
