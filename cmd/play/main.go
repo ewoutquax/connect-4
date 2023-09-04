@@ -6,8 +6,11 @@ import (
 	"github.com/ewoutquax/connect-4/internals/config"
 	"github.com/ewoutquax/connect-4/internals/game"
 	"github.com/ewoutquax/connect-4/internals/player"
+	"github.com/ewoutquax/connect-4/pkg/benchmark"
 	"github.com/ewoutquax/connect-4/utils"
 )
+
+var bench *benchmark.Benchmark = benchmark.Singleton()
 
 func main() {
 	config.InitializeApp()
@@ -30,6 +33,9 @@ func main() {
 			)
 		}
 
+		bench.Start("playGame")
 		myGame.Play()
+		bench.Stop("playGame")
+		fmt.Println(bench.Report())
 	}
 }

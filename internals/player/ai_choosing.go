@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/ewoutquax/connect-4/internals/board"
+	"github.com/ewoutquax/connect-4/pkg/benchmark"
 	"github.com/ewoutquax/connect-4/pkg/storage"
 )
 
@@ -19,6 +20,8 @@ type BestMoveOptions struct {
 	Epsilon          float64
 	HookTrainingGame func(nextMove int)
 }
+
+var bench *benchmark.Benchmark = benchmark.Singleton()
 
 func BestMoveForBoard(options *BestMoveOptions) int {
 	var tempBoard board.Board
@@ -35,7 +38,9 @@ func BestMoveForBoard(options *BestMoveOptions) int {
 			tempBoard = board.FromState(origBoardState)
 			tempBoard.MakeMove(move, options.Chip)
 
+			bench.Start("GetState")
 			_, stateScore = storage.GetState(string(tempBoard.ToState()))
+			bench.Stop("GetState")
 
 			if stateScore.Count < thresholdTrainingStateCount {
 				options.HookTrainingGame(move)
