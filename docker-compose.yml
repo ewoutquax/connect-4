@@ -1,0 +1,34 @@
+version: "3.7"
+
+services:
+  redis:
+    image: redis
+    restart: on-failure
+    volumes:
+      - datadir-redis:/data
+    networks:
+      - connect-4
+    ports:
+      - 6379:6379
+
+  connect-4:
+    image: connect-4:latest
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    restart: on-failure
+    stdin_open: true
+    tty: true
+    environment:
+      - GOENV=prod
+    depends_on:
+      - redis
+    networks:
+      - connect-4
+
+networks:
+  connect-4:
+    driver: bridge
+
+volumes:
+  datadir-redis:
